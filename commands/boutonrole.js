@@ -9,7 +9,13 @@ module.exports = {
 
         // Vérifie si l'utilisateur a les permissions
         if (!interaction.member.permissions.has('Administrator')) {
-            await interaction.reply({ content: "Permissions manquantes : Administrateur ", ephemeral: true })
+            await interaction.reply({ content: "Permissions manquantes : Administrateur", ephemeral: true })
+            return
+        }
+
+        // Vérifie si le serveur est le bon
+        if (interaction.member.guild.id != "1017742904753655828") {
+            await interaction.reply({ content: "Mauvais serveur", ephemeral: true })
             return
         }
 

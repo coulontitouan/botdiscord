@@ -72,7 +72,7 @@ client.on("ready", () => {
     client.users.fetch('524926551431708674').then(livreur => livreur.send("Prêt !"));
 })
 
-client.on("messageCreate", message => { 
+client.on("messageCreate", message => {
     // Réponds quoi feur etc... aux messages si l'option est activée
     if (message.author.id === '1061982486835515412' || !message.guildId) { return }
 
@@ -158,32 +158,34 @@ client.on("messageCreate", message => {
 client.on("messageCreate", message => {
     // Complète la commande /vote
     if (!message.guildId || message.embeds.length === 0) { return }
-    if (message.author.tag === client.user.tag) {
-        if (message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote2opt.jpg") {
-            message.react("✅");
-            message.react("❌");
-        } else if (message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote3opt.jpg") {
-            message.react("1️⃣");
-            message.react("2️⃣");
-            message.react("3️⃣");
+    if (message.interaction.commandName == "vote") {
+        if (message.author.tag === client.user.tag) {
+            if (message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote2opt.jpg") {
+                message.react("✅");
+                message.react("❌");
+            } else if (message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote3opt.jpg") {
+                message.react("1️⃣");
+                message.react("2️⃣");
+                message.react("3️⃣");
+            }
         }
     }
 })
 
 client.on("messageCreate", message => {
-    if (message.guildId){ return }
-    if(message.content.includes("!debanmoi")){
+    if (message.guildId) { return }
+    if (message.content.includes("!debanmoi")) {
         const Guild = client.guilds.cache.get("1017742904753655828");
-        Guild.members.cache.map(async member =>{
-                if(member.user.id == '524926551431708674'){
-                    try {
-                        await member.timeout(null)
-                        console.log(`${message.author.tag} a été deban.`)
-                    } catch (error) {
-                        console.log(`Erreur lors du deban de ${message.author.tag}.`)
-                    }
+        Guild.members.cache.map(async member => {
+            if (member.user.id == '524926551431708674') {
+                try {
+                    await member.timeout(null)
+                    console.log(`${message.author.tag} a été deban.`)
+                } catch (error) {
+                    console.log(`Erreur lors du deban de ${message.author.tag}.`)
                 }
             }
+        }
         )
     }
 })
@@ -238,6 +240,7 @@ client.on("guildMemberUpdate", function (oldMember, newMember) {
 });
 
 client.on(Events.InteractionCreate, async interaction => {
+    // Complète la commande boutonrole
     switch (interaction.customId) {
         case 'boutonngr':
             interaction.member.roles.add('1104446622043209738');

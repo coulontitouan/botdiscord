@@ -135,7 +135,7 @@ client.on("messageCreate", message => { // reply feur to quoi
     
     if(message.author.tag == client.user.tag){
         try{
-    		if(message.embeds[0].data.thumbnail.url == "https://i.imgur.com/mPbkGEu.jpg"){
+    		if(message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote.jpg"){
                 message.react("✅");
                 message.react("❌");
             }else if(message.embeds[0].data.thumbnail.url == "https://i.postimg.cc/tCTmtJqh/image.png"){

@@ -27,7 +27,7 @@ module.exports = {
             // Crée un message de vote à 2 possibilités
             embed = new EmbedBuilder()
                 .setTitle(interaction.options.getString('intitule'))
-                .setThumbnail('https://i.imgur.com/mPbkGEu.jpg')
+                .setThumbnail('https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote.jpg')
                 .addFields(
                     { name: interaction.options.getString('option1'), value: '✅', inline: true },
                     { name: interaction.options.getString('option2'), value: '❌', inline: true },

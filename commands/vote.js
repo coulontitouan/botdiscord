@@ -27,7 +27,7 @@ module.exports = {
             // Crée un message de vote à 2 possibilités
             embed = new EmbedBuilder()
                 .setTitle(interaction.options.getString('intitule'))
-                .setThumbnail('https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote.jpg')
+                .setThumbnail('https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote2opt.jpg')
                 .addFields(
                     { name: interaction.options.getString('option1'), value: '✅', inline: true },
                     { name: interaction.options.getString('option2'), value: '❌', inline: true },
@@ -37,7 +37,7 @@ module.exports = {
             // Crée un message de vote à 3 possibilités
             embed = new EmbedBuilder()
                 .setTitle(interaction.options.getString('intitule'))
-                .setThumbnail('https://i.postimg.cc/tCTmtJqh/image.png')
+                .setThumbnail('https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote3opt.jpg')
                 .addFields(
                     { name: interaction.options.getString('option1'), value: '1️⃣' },
                     { name: interaction.options.getString('option2'), value: '2️⃣' },

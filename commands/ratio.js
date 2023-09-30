@@ -28,11 +28,11 @@ module.exports = {
                     ephemeral: true
                 })
 
+                console.log(`Ratio de ${interaction.user.tag} sur ${target.tag}`)
+
                 return
             }
         }
-
-        console.log(`Ratio de ${interaction.user.tag} sur ${target.tag}`)
 
         interaction.reply({
             content: `L'utilisateur ${target} n'a pas été trouvé... \n Il faut que le message soit dans les 100 derniers messages du salon`,

@@ -24,6 +24,7 @@ module.exports = {
     async execute(interaction) {
         let embed
         if (!interaction.options.getString('option3')) {
+            // Crée un message de vote à 2 possibilités
             embed = new EmbedBuilder()
                 .setTitle(interaction.options.getString('intitule'))
                 .setThumbnail('https://i.imgur.com/mPbkGEu.jpg')
@@ -31,8 +32,9 @@ module.exports = {
                     { name: interaction.options.getString('option1'), value: '✅', inline: true },
                     { name: interaction.options.getString('option2'), value: '❌', inline: true },
                 )
-                .setColor(0xFFFFFF);
+                .setColor(0xFFFFFF)
         } else {
+            // Crée un message de vote à 3 possibilités
             embed = new EmbedBuilder()
                 .setTitle(interaction.options.getString('intitule'))
                 .setThumbnail('https://i.postimg.cc/tCTmtJqh/image.png')
@@ -41,8 +43,9 @@ module.exports = {
                     { name: interaction.options.getString('option2'), value: '2️⃣' },
                     { name: interaction.options.getString('option3'), value: '3️⃣' },
                 )
-                .setColor(0xFFFFFF);
+                .setColor(0xFFFFFF)
         }
+        // Envoi du message
         interaction.reply({ embeds: [embed] })
     },
 };

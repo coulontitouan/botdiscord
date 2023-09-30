@@ -40,7 +40,7 @@ module.exports = {
         }
 
         if (interaction.guild.members.cache.has(target.id)) {
-            let member = await interaction.guild.members.fetch(target.id)
+            member = await interaction.guild.members.fetch(target.id)
         }
 
         if (member) {

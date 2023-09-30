@@ -4,13 +4,16 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('boutonrole')
         .setDescription('Créer le bouton role'),
+
     async execute(interaction) {
 
+        // Vérifie si l'utilisateur a les permissions
         if (!interaction.member.permissions.has('Administrator')) {
-            await interaction.reply({ content: "T'as pas les perms bg", ephemeral: true })
+            await interaction.reply({ content: "Permissions manquantes : Administrateur ", ephemeral: true })
             return
         }
 
+        // Crée les boutons 
         const boutons = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
@@ -23,8 +26,9 @@ module.exports = {
                     .setCustomId('boutonjuif')
                     .setLabel('Devenir un juif')
                     .setStyle(ButtonStyle.Danger)
-            );
-            
+            )
+
+        // Crée l'"embed" message 
         const message = new EmbedBuilder()
             .setTitle("Rôles du serveur")
             .setDescription("Click sur les rôles que tu veux obtenir sur le serveur")

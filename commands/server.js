@@ -6,9 +6,11 @@ module.exports = {
         .setDescription('Donne les informations sur le serveur'),
     async execute(interaction) {
 
+        // Récupere le serveur et le bot
         const guild = interaction.guild
         let bot = await interaction.guild.members.fetch(interaction.client.application.id)
 
+        // Compte les salons sans les catégories
         let countChannel = 0
         let salonsRaw = (await guild.channels.fetch())
 
@@ -18,6 +20,7 @@ module.exports = {
             }
         })
 
+        // Construction du message final
         let embed = new EmbedBuilder()
             .setTitle(guild.name)
             .setDescription("Membres : " + guild.memberCount + "\n"

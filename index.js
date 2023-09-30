@@ -54,7 +54,7 @@ client.on("ready", () => { // send a message when bot ready and set presence
     console.log(`${client.user.tag} est prêt!`);
     
     const Guild = client.guilds.cache.get("1017742904753655828");
-    var botNumber = 0;
+    let botNumber = 0;
     const Members = Guild.members.cache.map(member =>{
         if(member.user.bot == false){return member.user.username}botNumber+=1});
     
@@ -73,17 +73,17 @@ client.on("messageCreate", message => { // reply feur to quoi
     if(message.author.id === '1061982486835515412'){return;}
     
     const fichier = "./config/configReglages.json"
-    configJSON = JSON.parse(fs.readFileSync(fichier,"utf-8"));
+    let configJSON = JSON.parse(fs.readFileSync(fichier,"utf-8"));
     
     if(message.member.roles.cache.has("1104446622043209738")){
         if(message.content.startsWith("!")){
-            command = message.content.slice(message.content.indexOf("!") + 1);
+            let command = message.content.slice(message.content.indexOf("!") + 1);
             switch(command) {
                 case "ping":
                     message.channel.send("pong");
                 break;
                 case "quoifeur":
-                    etat = configJSON["quoifeur"]
+                    let etat = configJSON["quoifeur"]
                     configJSON["quoifeur"] = !configJSON["quoifeur"];
                     fs.writeFileSync(fichier, JSON.stringify(configJSON,null,2));
                     if(etat){
@@ -114,24 +114,23 @@ client.on("messageCreate", message => { // reply feur to quoi
 
         switch(message.content.toLowerCase()){
             case "oui":
-                message.reply("ski");
-                return;
+                message.reply("ski")
+                break
             case "feur":
-                message.reply("ouge");
-                return;
+                message.reply("ouge")
+                break
             case "ouge":
-                message.reply("gorge");
-                return;
+
             case "rouge":
-                message.reply("gorge");
-                return;
+                message.reply("gorge")
+                break
             case "gorge":
-                message.reply("profonde");
-                return;
+                message.reply("profonde")
+                break
             case "profonde":
-                message.reply("eur");
-                return;
-        }
+                message.reply("eur")
+                break
+            }
     }
     
     if(message.author.tag == client.user.tag){

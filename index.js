@@ -157,7 +157,7 @@ client.on("messageCreate", message => {
 
 client.on("messageCreate", message => {
     // Complète la commande /vote
-    if (!message.guildId || message.embeds.length === 0) { return }
+    if (!message.guildId || message.embeds.length === 0 || !message.interaction) { return }
     if (message.interaction.commandName == "vote") {
         if (message.author.tag === client.user.tag) {
             if (message.embeds[0].data.thumbnail.url == "https://raw.githubusercontent.com/coulontitouan/botdiscord/main/static/vote2opt.jpg") {

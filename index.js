@@ -193,10 +193,10 @@ client.on("messageCreate", message => {
 client.on("guildMemberUpdate", function (oldMember, newMember) {
 
     if(newMember.id == "429307989011202048"){
-        if(newMember.nickname == "faux titouan"){
+        if(newMember.nickname == "faux titouan (la ptite soumise)"){
             return
         }
-        newMember.setNickname("faux titouan")
+        newMember.setNickname("faux titouan (la ptite soumise)")
         return
     }
 

@@ -1,8 +1,11 @@
-const { Client, GatewayIntentBits, Events } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Partials } = require("discord.js");
 const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
 const client = new Client({
+    partials: [
+        Partials.Channel,
+    ],
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -177,14 +180,14 @@ client.on("messageCreate", message => {
     if (message.content.includes("!debanmoi")) {
         const Guild = client.guilds.cache.get("1017742904753655828");
         Guild.members.cache.map(async member => {
-            //if (member.user.id == '524926551431708674') {
+            if (member.user.id == message.author.id) {
                 try {
                     await member.timeout(null)
-                    console.log(`${message.author.tag} a été deban.`)
+                    message.reply(`${message.author.tag} a été deban.`)
                 } catch (error) {
                     console.log(`Erreur lors du deban de ${message.author.tag}.`)
                 }
-            //}
+            }
         }
         )
     }

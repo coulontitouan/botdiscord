@@ -177,14 +177,14 @@ client.on("messageCreate", message => {
     if (message.content.includes("!debanmoi")) {
         const Guild = client.guilds.cache.get("1017742904753655828");
         Guild.members.cache.map(async member => {
-            if (member.user.id == '524926551431708674') {
+            //if (member.user.id == '524926551431708674') {
                 try {
                     await member.timeout(null)
                     console.log(`${message.author.tag} a été deban.`)
                 } catch (error) {
                     console.log(`Erreur lors du deban de ${message.author.tag}.`)
                 }
-            }
+            //}
         }
         )
     }

@@ -203,6 +203,14 @@ client.on("guildMemberUpdate", function (oldMember, newMember) {
         return
     }
 
+    if(newMember.id == "766693700050878504"){
+        if(newMember.nickname == "cyprine le voleur de vannes"){
+            return
+        }
+        newMember.setNickname("cyprine le voleur de vannes")
+        return
+    }
+
     let conditionAncienNom, conditionNouveauNom
 
     if (oldMember.nickname != null) {

@@ -1,0 +1,1784 @@
+{
+    "Aatrox": {
+        "id": "Aatrox",
+        "key": "266",
+        "name": "Aatrox",
+        "title": "Épée des Darkin",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Puits de sang"
+    },
+    "Ahri": {
+        "id": "Ahri",
+        "key": "103",
+        "name": "Ahri",
+        "title": "Renard à neuf queues",
+        "tags": [
+            "Mage",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Akali": {
+        "id": "Akali",
+        "key": "84",
+        "name": "Akali",
+        "title": "Assassin rebelle",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Énergie"
+    },
+    "Akshan": {
+        "id": "Akshan",
+        "key": "166",
+        "name": "Akshan",
+        "title": "Sentinelle rebelle",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Alistar": {
+        "id": "Alistar",
+        "key": "12",
+        "name": "Alistar",
+        "title": "Minotaure",
+        "tags": [
+            "Tank",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Amumu": {
+        "id": "Amumu",
+        "key": "32",
+        "name": "Amumu",
+        "title": "Momie mélancolique",
+        "tags": [
+            "Tank",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Anivia": {
+        "id": "Anivia",
+        "key": "34",
+        "name": "Anivia",
+        "title": "Cryophénix",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Annie": {
+        "id": "Annie",
+        "key": "1",
+        "name": "Annie",
+        "title": "Enfant des ténèbres",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Aphelios": {
+        "id": "Aphelios",
+        "key": "523",
+        "name": "Aphelios",
+        "title": "Arme des Lunaris",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Ashe": {
+        "id": "Ashe",
+        "key": "22",
+        "name": "Ashe",
+        "title": "Archère de givre",
+        "tags": [
+            "Marksman",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "AurelionSol": {
+        "id": "AurelionSol",
+        "key": "136",
+        "name": "Aurelion Sol",
+        "title": "Forgeur d'étoiles",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Azir": {
+        "id": "Azir",
+        "key": "268",
+        "name": "Azir",
+        "title": "Empereur des sables",
+        "tags": [
+            "Mage",
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Bard": {
+        "id": "Bard",
+        "key": "432",
+        "name": "Bard",
+        "title": "Gardien errant",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Belveth": {
+        "id": "Belveth",
+        "key": "200",
+        "name": "Bel'Veth",
+        "title": "Impératrice du Néant",
+        "tags": [
+            "Fighter"
+        ],
+        "partype": ""
+    },
+    "Blitzcrank": {
+        "id": "Blitzcrank",
+        "key": "53",
+        "name": "Blitzcrank",
+        "title": "Golem de vapeur",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Brand": {
+        "id": "Brand",
+        "key": "63",
+        "name": "Brand",
+        "title": "Vengeur flamboyant",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Braum": {
+        "id": "Braum",
+        "key": "201",
+        "name": "Braum",
+        "title": "Cœur de Freljord",
+        "tags": [
+            "Support",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Briar": {
+        "id": "Briar",
+        "key": "233",
+        "name": "Briar",
+        "title": "Faim insatiable",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Fureur"
+    },
+    "Caitlyn": {
+        "id": "Caitlyn",
+        "key": "51",
+        "name": "Caitlyn",
+        "title": "Shérif de Piltover",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Camille": {
+        "id": "Camille",
+        "key": "164",
+        "name": "Camille",
+        "title": "Ombre d'acier",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Cassiopeia": {
+        "id": "Cassiopeia",
+        "key": "69",
+        "name": "Cassiopeia",
+        "title": "Étreinte du serpent",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Chogath": {
+        "id": "Chogath",
+        "key": "31",
+        "name": "Cho'Gath",
+        "title": "Terreur noire",
+        "tags": [
+            "Tank",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Corki": {
+        "id": "Corki",
+        "key": "42",
+        "name": "Corki",
+        "title": "Artilleur téméraire",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Darius": {
+        "id": "Darius",
+        "key": "122",
+        "name": "Darius",
+        "title": "Main de Noxus",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Diana": {
+        "id": "Diana",
+        "key": "131",
+        "name": "Diana",
+        "title": "Mépris de la lune",
+        "tags": [
+            "Fighter",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Draven": {
+        "id": "Draven",
+        "key": "119",
+        "name": "Draven",
+        "title": "Glorieux exécuteur",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "DrMundo": {
+        "id": "DrMundo",
+        "key": "36",
+        "name": "Dr. Mundo",
+        "title": "Dément de Zaun",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Aucune"
+    },
+    "Ekko": {
+        "id": "Ekko",
+        "key": "245",
+        "name": "Ekko",
+        "title": "Fractureur du temps",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Elise": {
+        "id": "Elise",
+        "key": "60",
+        "name": "Elise",
+        "title": "Reine araignée",
+        "tags": [
+            "Mage",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Evelynn": {
+        "id": "Evelynn",
+        "key": "28",
+        "name": "Evelynn",
+        "title": "Démon sadique",
+        "tags": [
+            "Assassin",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Ezreal": {
+        "id": "Ezreal",
+        "key": "81",
+        "name": "Ezreal",
+        "title": "Explorateur prodigue",
+        "tags": [
+            "Marksman",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Fiddlesticks": {
+        "id": "Fiddlesticks",
+        "key": "9",
+        "name": "Fiddlesticks",
+        "title": "Effroi nocturne",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Fiora": {
+        "id": "Fiora",
+        "key": "114",
+        "name": "Fiora",
+        "title": "Sublime bretteuse",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Fizz": {
+        "id": "Fizz",
+        "key": "105",
+        "name": "Fizz",
+        "title": "Filou des mers",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Galio": {
+        "id": "Galio",
+        "key": "3",
+        "name": "Galio",
+        "title": "Colosse",
+        "tags": [
+            "Tank",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Gangplank": {
+        "id": "Gangplank",
+        "key": "41",
+        "name": "Gangplank",
+        "title": "Fléau des mers",
+        "tags": [
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Garen": {
+        "id": "Garen",
+        "key": "86",
+        "name": "Garen",
+        "title": "Force de Demacia",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Aucune"
+    },
+    "Gnar": {
+        "id": "Gnar",
+        "key": "150",
+        "name": "Gnar",
+        "title": "Chaînon manquant",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Rage"
+    },
+    "Gragas": {
+        "id": "Gragas",
+        "key": "79",
+        "name": "Gragas",
+        "title": "Agitateur",
+        "tags": [
+            "Fighter",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Graves": {
+        "id": "Graves",
+        "key": "104",
+        "name": "Graves",
+        "title": "Hors-la-loi",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Gwen": {
+        "id": "Gwen",
+        "key": "887",
+        "name": "Gwen",
+        "title": "Couturière sacrée",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Hecarim": {
+        "id": "Hecarim",
+        "key": "120",
+        "name": "Hecarim",
+        "title": "Ombre de la guerre",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Heimerdinger": {
+        "id": "Heimerdinger",
+        "key": "74",
+        "name": "Heimerdinger",
+        "title": "Inventeur réputé",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Hwei": {
+        "id": "Hwei",
+        "key": "910",
+        "name": "Hwei",
+        "title": "Visionnaire",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Illaoi": {
+        "id": "Illaoi",
+        "key": "420",
+        "name": "Illaoi",
+        "title": "Prêtresse du kraken",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Irelia": {
+        "id": "Irelia",
+        "key": "39",
+        "name": "Irelia",
+        "title": "Danseuse des lames",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Ivern": {
+        "id": "Ivern",
+        "key": "427",
+        "name": "Ivern",
+        "title": "Aîné de la forêt",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Janna": {
+        "id": "Janna",
+        "key": "40",
+        "name": "Janna",
+        "title": "Avatar de l'air",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "JarvanIV": {
+        "id": "JarvanIV",
+        "key": "59",
+        "name": "Jarvan IV",
+        "title": "Exemple demacien",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Jax": {
+        "id": "Jax",
+        "key": "24",
+        "name": "Jax",
+        "title": "Maître d'armes",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Jayce": {
+        "id": "Jayce",
+        "key": "126",
+        "name": "Jayce",
+        "title": "Protecteur du futur",
+        "tags": [
+            "Fighter",
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Jhin": {
+        "id": "Jhin",
+        "key": "202",
+        "name": "Jhin",
+        "title": "Virtuose",
+        "tags": [
+            "Marksman",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Jinx": {
+        "id": "Jinx",
+        "key": "222",
+        "name": "Jinx",
+        "title": "Gâchette folle",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Kaisa": {
+        "id": "Kaisa",
+        "key": "145",
+        "name": "Kai'Sa",
+        "title": "Fille du Néant",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Kalista": {
+        "id": "Kalista",
+        "key": "429",
+        "name": "Kalista",
+        "title": "Lance de la vengeance",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Karma": {
+        "id": "Karma",
+        "key": "43",
+        "name": "Karma",
+        "title": "Sagesse incarnée",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Karthus": {
+        "id": "Karthus",
+        "key": "30",
+        "name": "Karthus",
+        "title": "Liche",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Kassadin": {
+        "id": "Kassadin",
+        "key": "38",
+        "name": "Kassadin",
+        "title": "Chasseur du Néant",
+        "tags": [
+            "Assassin",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Katarina": {
+        "id": "Katarina",
+        "key": "55",
+        "name": "Katarina",
+        "title": "Lame sinistre",
+        "tags": [
+            "Assassin",
+            "Mage"
+        ],
+        "partype": "Aucune"
+    },
+    "Kayle": {
+        "id": "Kayle",
+        "key": "10",
+        "name": "Kayle",
+        "title": "Vertueuse",
+        "tags": [
+            "Fighter",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Kayn": {
+        "id": "Kayn",
+        "key": "141",
+        "name": "Kayn",
+        "title": "Faucheur de l'ombre",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Kennen": {
+        "id": "Kennen",
+        "key": "85",
+        "name": "Kennen",
+        "title": "Cœur de la tempête",
+        "tags": [
+            "Mage",
+            "Marksman"
+        ],
+        "partype": "Énergie"
+    },
+    "Khazix": {
+        "id": "Khazix",
+        "key": "121",
+        "name": "Kha'Zix",
+        "title": "Faucheur du Néant",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Kindred": {
+        "id": "Kindred",
+        "key": "203",
+        "name": "Kindred",
+        "title": "Chasseurs éternels",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Kled": {
+        "id": "Kled",
+        "key": "240",
+        "name": "Kled",
+        "title": "Cavalier colérique",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Courage"
+    },
+    "KogMaw": {
+        "id": "KogMaw",
+        "key": "96",
+        "name": "Kog'Maw",
+        "title": "Gueule des abysses",
+        "tags": [
+            "Marksman",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "KSante": {
+        "id": "KSante",
+        "key": "897",
+        "name": "K'Santé",
+        "title": "Fierté de Nazumah",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Leblanc": {
+        "id": "Leblanc",
+        "key": "7",
+        "name": "LeBlanc",
+        "title": "Manipulatrice",
+        "tags": [
+            "Assassin",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "LeeSin": {
+        "id": "LeeSin",
+        "key": "64",
+        "name": "Lee Sin",
+        "title": "Moine aveugle",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Énergie"
+    },
+    "Leona": {
+        "id": "Leona",
+        "key": "89",
+        "name": "Leona",
+        "title": "Aube radieuse",
+        "tags": [
+            "Tank",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Lillia": {
+        "id": "Lillia",
+        "key": "876",
+        "name": "Lillia",
+        "title": "Fleur timide",
+        "tags": [
+            "Fighter",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Lissandra": {
+        "id": "Lissandra",
+        "key": "127",
+        "name": "Lissandra",
+        "title": "Sorcière de glace",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Lucian": {
+        "id": "Lucian",
+        "key": "236",
+        "name": "Lucian",
+        "title": "Purificateur",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Lulu": {
+        "id": "Lulu",
+        "key": "117",
+        "name": "Lulu",
+        "title": "Sorcière féérique",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Lux": {
+        "id": "Lux",
+        "key": "99",
+        "name": "Lux",
+        "title": "Dame de lumière",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Malphite": {
+        "id": "Malphite",
+        "key": "54",
+        "name": "Malphite",
+        "title": "Éclat du monolithe",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Malzahar": {
+        "id": "Malzahar",
+        "key": "90",
+        "name": "Malzahar",
+        "title": "Prophète du Néant",
+        "tags": [
+            "Mage",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Maokai": {
+        "id": "Maokai",
+        "key": "57",
+        "name": "Maokai",
+        "title": "Tréant torturé",
+        "tags": [
+            "Tank",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "MasterYi": {
+        "id": "MasterYi",
+        "key": "11",
+        "name": "Maître Yi",
+        "title": "Fine lame Wuju",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Milio": {
+        "id": "Milio",
+        "key": "902",
+        "name": "Milio",
+        "title": "Douce flamme",
+        "tags": [
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "MissFortune": {
+        "id": "MissFortune",
+        "key": "21",
+        "name": "Miss Fortune",
+        "title": "Chasseuse de primes",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "MonkeyKing": {
+        "id": "MonkeyKing",
+        "key": "62",
+        "name": "Wukong",
+        "title": "Roi des singes",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Mordekaiser": {
+        "id": "Mordekaiser",
+        "key": "82",
+        "name": "Mordekaiser",
+        "title": "Revenant de fer",
+        "tags": [
+            "Fighter"
+        ],
+        "partype": "Bouclier"
+    },
+    "Morgana": {
+        "id": "Morgana",
+        "key": "25",
+        "name": "Morgana",
+        "title": "Déchue",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Naafiri": {
+        "id": "Naafiri",
+        "key": "950",
+        "name": "Naafiri",
+        "title": "la meute de fer",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Nami": {
+        "id": "Nami",
+        "key": "267",
+        "name": "Nami",
+        "title": "Aquamancienne",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Nasus": {
+        "id": "Nasus",
+        "key": "75",
+        "name": "Nasus",
+        "title": "Gardien des sables",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Nautilus": {
+        "id": "Nautilus",
+        "key": "111",
+        "name": "Nautilus",
+        "title": "Titan des profondeurs",
+        "tags": [
+            "Tank",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Neeko": {
+        "id": "Neeko",
+        "key": "518",
+        "name": "Neeko",
+        "title": "Caméléon curieux",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Nidalee": {
+        "id": "Nidalee",
+        "key": "76",
+        "name": "Nidalee",
+        "title": "Chasseresse bestiale",
+        "tags": [
+            "Assassin",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Nilah": {
+        "id": "Nilah",
+        "key": "895",
+        "name": "Nilah",
+        "title": "Joie incarnée",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Nocturne": {
+        "id": "Nocturne",
+        "key": "56",
+        "name": "Nocturne",
+        "title": "Éternel cauchemar",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Nunu": {
+        "id": "Nunu",
+        "key": "20",
+        "name": "Nunu et Willump",
+        "title": "Le Garçon et son yéti",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Olaf": {
+        "id": "Olaf",
+        "key": "2",
+        "name": "Olaf",
+        "title": "Berzerker",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Orianna": {
+        "id": "Orianna",
+        "key": "61",
+        "name": "Orianna",
+        "title": "Demoiselle mécanique",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Ornn": {
+        "id": "Ornn",
+        "key": "516",
+        "name": "Ornn",
+        "title": "Dieu de la forge volcanique",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Pantheon": {
+        "id": "Pantheon",
+        "key": "80",
+        "name": "Pantheon",
+        "title": "Lance éternelle",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Poppy": {
+        "id": "Poppy",
+        "key": "78",
+        "name": "Poppy",
+        "title": "Gardienne du marteau",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Pyke": {
+        "id": "Pyke",
+        "key": "555",
+        "name": "Pyke",
+        "title": "Éventreur des abysses",
+        "tags": [
+            "Support",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Qiyana": {
+        "id": "Qiyana",
+        "key": "246",
+        "name": "Qiyana",
+        "title": "Impératrice des éléments",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Quinn": {
+        "id": "Quinn",
+        "key": "133",
+        "name": "Quinn",
+        "title": "Ailes de Demacia",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Rakan": {
+        "id": "Rakan",
+        "key": "497",
+        "name": "Rakan",
+        "title": "Charmeur",
+        "tags": [
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Rammus": {
+        "id": "Rammus",
+        "key": "33",
+        "name": "Rammus",
+        "title": "Tatou blindé",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "RekSai": {
+        "id": "RekSai",
+        "key": "421",
+        "name": "Rek'Sai",
+        "title": "Traqueuse du Néant",
+        "tags": [
+            "Fighter"
+        ],
+        "partype": "Rage"
+    },
+    "Rell": {
+        "id": "Rell",
+        "key": "526",
+        "name": "Rell",
+        "title": "Vierge de fer",
+        "tags": [
+            "Tank",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Renata": {
+        "id": "Renata",
+        "key": "888",
+        "name": "Renata Glasc",
+        "title": "Baronne de la chimie",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Renekton": {
+        "id": "Renekton",
+        "key": "58",
+        "name": "Renekton",
+        "title": "Dévoreur des sables",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Fureur"
+    },
+    "Rengar": {
+        "id": "Rengar",
+        "key": "107",
+        "name": "Rengar",
+        "title": "Fier traqueur",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Férocité"
+    },
+    "Riven": {
+        "id": "Riven",
+        "key": "92",
+        "name": "Riven",
+        "title": "Exilée brisée",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Aucune"
+    },
+    "Rumble": {
+        "id": "Rumble",
+        "key": "68",
+        "name": "Rumble",
+        "title": "Menace mécanisée",
+        "tags": [
+            "Fighter",
+            "Mage"
+        ],
+        "partype": "Vapeur"
+    },
+    "Ryze": {
+        "id": "Ryze",
+        "key": "13",
+        "name": "Ryze",
+        "title": "Mage runique",
+        "tags": [
+            "Mage",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Samira": {
+        "id": "Samira",
+        "key": "360",
+        "name": "Samira",
+        "title": "Rose du désert",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Sejuani": {
+        "id": "Sejuani",
+        "key": "113",
+        "name": "Sejuani",
+        "title": "Fureur du nord",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Senna": {
+        "id": "Senna",
+        "key": "235",
+        "name": "Senna",
+        "title": "Rédemptrice",
+        "tags": [
+            "Marksman",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Seraphine": {
+        "id": "Seraphine",
+        "key": "147",
+        "name": "Séraphine",
+        "title": "Chanteuse rêveuse",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Sett": {
+        "id": "Sett",
+        "key": "875",
+        "name": "Sett",
+        "title": "Patron",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Agressivité"
+    },
+    "Shaco": {
+        "id": "Shaco",
+        "key": "35",
+        "name": "Shaco",
+        "title": "Bouffon des ténèbres",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Shen": {
+        "id": "Shen",
+        "key": "98",
+        "name": "Shen",
+        "title": "Œil du crépuscule",
+        "tags": [
+            "Tank"
+        ],
+        "partype": "Énergie"
+    },
+    "Shyvana": {
+        "id": "Shyvana",
+        "key": "102",
+        "name": "Shyvana",
+        "title": "Demi-dragon",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Fureur"
+    },
+    "Singed": {
+        "id": "Singed",
+        "key": "27",
+        "name": "Singed",
+        "title": "Chimiste fou",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Sion": {
+        "id": "Sion",
+        "key": "14",
+        "name": "Sion",
+        "title": "Colosse mort-vivant",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Sivir": {
+        "id": "Sivir",
+        "key": "15",
+        "name": "Sivir",
+        "title": "Vierge martiale",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Skarner": {
+        "id": "Skarner",
+        "key": "72",
+        "name": "Skarner",
+        "title": "Gardien de cristal",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Sona": {
+        "id": "Sona",
+        "key": "37",
+        "name": "Sona",
+        "title": "Virtuose de la harpe",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Soraka": {
+        "id": "Soraka",
+        "key": "16",
+        "name": "Soraka",
+        "title": "Enfant des étoiles",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Swain": {
+        "id": "Swain",
+        "key": "50",
+        "name": "Swain",
+        "title": "Grand général noxien",
+        "tags": [
+            "Mage",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Sylas": {
+        "id": "Sylas",
+        "key": "517",
+        "name": "Sylas",
+        "title": "Révolutionnaire déchaîné",
+        "tags": [
+            "Mage",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Syndra": {
+        "id": "Syndra",
+        "key": "134",
+        "name": "Syndra",
+        "title": "Souveraine obscure",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "TahmKench": {
+        "id": "TahmKench",
+        "key": "223",
+        "name": "Tahm Kench",
+        "title": "Roi des rivières",
+        "tags": [
+            "Support",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Taliyah": {
+        "id": "Taliyah",
+        "key": "163",
+        "name": "Taliyah",
+        "title": "Tisseuse de pierres",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Talon": {
+        "id": "Talon",
+        "key": "91",
+        "name": "Talon",
+        "title": "Lame des ténèbres",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Taric": {
+        "id": "Taric",
+        "key": "44",
+        "name": "Taric",
+        "title": "Bouclier de Valoran",
+        "tags": [
+            "Support",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Teemo": {
+        "id": "Teemo",
+        "key": "17",
+        "name": "Teemo",
+        "title": "Scout de Bantam",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Thresh": {
+        "id": "Thresh",
+        "key": "412",
+        "name": "Thresh",
+        "title": "Garde aux chaînes",
+        "tags": [
+            "Support",
+            "Fighter"
+        ],
+        "partype": "Mana"
+    },
+    "Tristana": {
+        "id": "Tristana",
+        "key": "18",
+        "name": "Tristana",
+        "title": "Canonnière yordle",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Trundle": {
+        "id": "Trundle",
+        "key": "48",
+        "name": "Trundle",
+        "title": "Roi des trolls",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Tryndamere": {
+        "id": "Tryndamere",
+        "key": "23",
+        "name": "Tryndamere",
+        "title": "Roi barbare",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Fureur"
+    },
+    "TwistedFate": {
+        "id": "TwistedFate",
+        "key": "4",
+        "name": "Twisted Fate",
+        "title": "Maître des cartes",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Twitch": {
+        "id": "Twitch",
+        "key": "29",
+        "name": "Twitch",
+        "title": "Semeur de peste",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Udyr": {
+        "id": "Udyr",
+        "key": "77",
+        "name": "Udyr",
+        "title": "Gardien des esprits",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Urgot": {
+        "id": "Urgot",
+        "key": "6",
+        "name": "Urgot",
+        "title": "Broyeur",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Varus": {
+        "id": "Varus",
+        "key": "110",
+        "name": "Varus",
+        "title": "Flèche de la vengeance",
+        "tags": [
+            "Marksman",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Vayne": {
+        "id": "Vayne",
+        "key": "67",
+        "name": "Vayne",
+        "title": "Chasseresse nocturne",
+        "tags": [
+            "Marksman",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Veigar": {
+        "id": "Veigar",
+        "key": "45",
+        "name": "Veigar",
+        "title": "Seigneur des maléfices",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Velkoz": {
+        "id": "Velkoz",
+        "key": "161",
+        "name": "Vel'Koz",
+        "title": "Œil du Néant",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Vex": {
+        "id": "Vex",
+        "key": "711",
+        "name": "Vex",
+        "title": "Ombre du désespoir",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Vi": {
+        "id": "Vi",
+        "key": "254",
+        "name": "Vi",
+        "title": "Cogne de Piltover",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Viego": {
+        "id": "Viego",
+        "key": "234",
+        "name": "Viego",
+        "title": "Roi déchu",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Aucune"
+    },
+    "Viktor": {
+        "id": "Viktor",
+        "key": "112",
+        "name": "Viktor",
+        "title": "Héraut des machines",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Vladimir": {
+        "id": "Vladimir",
+        "key": "8",
+        "name": "Vladimir",
+        "title": "Saigneur pourpre",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Afflux sanguin"
+    },
+    "Volibear": {
+        "id": "Volibear",
+        "key": "106",
+        "name": "Volibear",
+        "title": "Tempête impitoyable",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Warwick": {
+        "id": "Warwick",
+        "key": "19",
+        "name": "Warwick",
+        "title": "Fureur déchaînée de Zaun",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Xayah": {
+        "id": "Xayah",
+        "key": "498",
+        "name": "Xayah",
+        "title": "Rebelle",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Xerath": {
+        "id": "Xerath",
+        "key": "101",
+        "name": "Xerath",
+        "title": "Mage suprême",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "XinZhao": {
+        "id": "XinZhao",
+        "key": "5",
+        "name": "Xin Zhao",
+        "title": "Sénéchal de Demacia",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Mana"
+    },
+    "Yasuo": {
+        "id": "Yasuo",
+        "key": "157",
+        "name": "Yasuo",
+        "title": "Disgracié",
+        "tags": [
+            "Fighter",
+            "Assassin"
+        ],
+        "partype": "Impulsion"
+    },
+    "Yone": {
+        "id": "Yone",
+        "key": "777",
+        "name": "Yone",
+        "title": "Inoublié",
+        "tags": [
+            "Assassin",
+            "Fighter"
+        ],
+        "partype": "Impulsion"
+    },
+    "Yorick": {
+        "id": "Yorick",
+        "key": "83",
+        "name": "Yorick",
+        "title": "Berger des âmes",
+        "tags": [
+            "Fighter",
+            "Tank"
+        ],
+        "partype": "Mana"
+    },
+    "Yuumi": {
+        "id": "Yuumi",
+        "key": "350",
+        "name": "Yuumi",
+        "title": "Gardienne du Grimoire",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Zac": {
+        "id": "Zac",
+        "key": "154",
+        "name": "Zac",
+        "title": "Arme secrète",
+        "tags": [
+            "Tank",
+            "Fighter"
+        ],
+        "partype": "Aucune"
+    },
+    "Zed": {
+        "id": "Zed",
+        "key": "238",
+        "name": "Zed",
+        "title": "Maître des ombres",
+        "tags": [
+            "Assassin"
+        ],
+        "partype": "Énergie"
+    },
+    "Zeri": {
+        "id": "Zeri",
+        "key": "221",
+        "name": "Zeri",
+        "title": "Étincelle de Zaun",
+        "tags": [
+            "Marksman"
+        ],
+        "partype": "Mana"
+    },
+    "Ziggs": {
+        "id": "Ziggs",
+        "key": "115",
+        "name": "Ziggs",
+        "title": "Expert des Hexplosifs",
+        "tags": [
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Zilean": {
+        "id": "Zilean",
+        "key": "26",
+        "name": "Zilean",
+        "title": "Gardien du Temps",
+        "tags": [
+            "Support",
+            "Mage"
+        ],
+        "partype": "Mana"
+    },
+    "Zoe": {
+        "id": "Zoe",
+        "key": "142",
+        "name": "Zoé",
+        "title": "Manifestation du Crépuscule",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    },
+    "Zyra": {
+        "id": "Zyra",
+        "key": "143",
+        "name": "Zyra",
+        "title": "Dame aux ronces",
+        "tags": [
+            "Mage",
+            "Support"
+        ],
+        "partype": "Mana"
+    }
+}

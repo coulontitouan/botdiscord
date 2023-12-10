@@ -1,8 +1,6 @@
-const { Client, GatewayIntentBits, Events, Partials, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Partials } = require("discord.js");
 const { token } = require("./config/configCode.json");
 const path = require("node:path");
-const cron = require("cron");
-const axios = require("axios")
 const fs = require("fs");
 const client = new Client({
     partials: [
@@ -19,6 +17,7 @@ const client = new Client({
 
 });
 client.commands = new Map();
+
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 
@@ -72,8 +71,6 @@ client.on("ready", () => {
         const status = Members[Math.floor(Math.random() * Members.length)];
         client.user.setPresence({ activities: [{ name: `${status}`, type: 3 }] });
     }, 10000);
-
-    devine_champ.start()
 
     client.users.fetch('524926551431708674').then(livreur => livreur.send("Prêt !"));
 })
@@ -274,66 +271,5 @@ client.on(Events.InteractionCreate, async interaction => {
             break;
     }
 })
-
-client.on('interactionCreate', async (interaction) => {
-    if (interaction.isAutocomplete()) {
-        if (interaction.commandName == "repondre"){
-            const focusedOption = interaction.options.getFocused(true);
-            let choices;
-
-            let request = await axios.get("https://ddragon.leagueoflegends.com/api/versions.json")
-            let version = request["data"][0]
-            request = await axios.get(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`)
-            let champions = Object.values(request["data"]["data"])
-
-            const filtered = champions.filter(choice => choice.startsWith(focusedOption.value));
-    
-            let options;
-            if (filtered.length > 25) {
-                options = filtered.slice(0, 25);
-            } else {
-                options = filtered;
-            }
-    
-            await interaction.respond(
-                options.map(choice => ({ name: choice, value: choice })),
-            );
-        }
-    }
-});
-
-let devine_champ = new cron.CronJob('*/10 * 22 * * *', async () => {
-    const Guild = client.guilds.cache.get("1017742904753655828");
-    const channel = Guild.channels.cache.get('1182053797049143337');
-
-    let request = await axios.get("https://ddragon.leagueoflegends.com/api/versions.json")
-    let version = request["data"][0]
-    
-    request = await axios.get(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`)
-    let champions = request["data"]["data"]
-    let randomChamp = champions[Object.keys(champions)[Math.floor(Math.random()*Object.keys(champions).length)]]["name"]
-    
-    const select = new StringSelectMenuBuilder()
-    .setCustomId('starter')
-    .setPlaceholder('Make a selection!');
-
-    for(let champion of Object.values(champions)){
-        select.addOptions(
-            new StringSelectMenuOptionBuilder()
-                .setLabel(champion["name"])
-                .setDescription(champion["title"])
-                .setValue(champion["id"]),
-        )
-    }
-
-    const row = new ActionRowBuilder()
-        .addComponents(select);
-    
-    console.log(randomChamp)
-    channel.send({
-        content: 'Qui est ce champion ?',
-        components: [row],
-    });
-},undefined,true,"Europe/Paris");
 
 client.login(token);

@@ -26,26 +26,56 @@ module.exports = {
                 .setName("league")
                 .setDescription("Donne le profil LoL de l'utilisateur")
                 .addStringOption(option =>
-                    option.setName("name")
-                        .setDescription("Le nom d'invocateur de l'user, laissez vide si configuré")))
+                    option.setName("pseudo")
+                        .setDescription("Le Riot ID du joueur ou @Discord du joueur, laissez vide si configuré"))
+                .addStringOption(option =>
+                    option.setName("tag")
+                        .setDescription("Le tag du joueur ( par défaut #EUW ) ")))
         .addSubcommand(subcommand =>
             subcommand
                 .setName("config")
                 .setDescription("Configure ton compte LoL pour qu'il soit pré-rempli")
                 .addStringOption(option =>
-                    option.setName("name")
-                        .setDescription("Ton nom d'invocateur ( Ex : NGR Faker ) ")
-                        .setRequired(true))),
+                    option.setName("pseudo")
+                        .setDescription("Ton Riot ID ( Ex : NGR Faker ) ")
+                        .setRequired(true))
+                .addStringOption(option =>
+                    option.setName("tag")
+                        .setDescription("Ton tag ( Ex : NGR Faker#EUW ) ")
+                        .setRequired(false))),
     async execute(interaction) {
 
         await interaction.deferReply()
         // La fonction fait appel un API donc sa durée est trop longue pour un simple interaction.reply(), il faut donc le différer
         const result = await (async function () {
-            // Pour récuperer l'entrée texte de la commande
-            let nomInvovateur = interaction.options.getString("name")
 
+            // Initialise un message d'erreur
             let embedMessage = new EmbedBuilder()
                 .setColor("#FF0000")
+            
+            // Pour récuperer l'entrée texte de la commande
+            let pseudo = interaction.options.getString("pseudo")
+            let tag = interaction.options.getString("tag")
+
+            // Vérification de la longueur pseudo et tag
+            if (!tag){
+                tag = "EUW"
+            }
+            else if (tag.length < 3 || tag.length>5){
+                if (tag.length>5){
+                    embedMessage.setTitle("Le tag est trop long, il doit comporter entre 3 et 5 caratères.")
+                }else{
+                    embedMessage.setTitle("Le tag est trop court, il doit comporter entre 3 et 5 caratères.")
+                }
+                return { embeds: [embedMessage] }
+            } else if (pseudo.length < 3 || pseudo.length>16 && !(pseudo.startsWith("<@") && pseudo.endsWith(">"))){
+                if (pseudo.length>16){
+                    embedMessage.setTitle("Le pseudo est trop long, il doit comporter entre 3 et 16 caratères.")
+                }else{
+                    embedMessage.setTitle("Le pseudo est trop court, il doit comporter entre 3 et 16 caratères.")
+                }
+                return { embeds: [embedMessage] }
+            }
 
             // Ouvre le fichier contenant les puuid
             const fichier = "config/configProfil.json"
@@ -53,12 +83,12 @@ module.exports = {
 
             // Sous-commande affichant le profil LoL
             if (interaction.options.getSubcommand() === 'league') {
-                let idConfig, profil
+                let idConfig, profil, profilRiot
                 // Vérifie si l'entrée texte de l'utilisateur correspond à une entrée dans configProfil.json
                 // ou bien à un pseudo LoL et si une information manque, renvoie une erreur
-                if (nomInvovateur) {
-                    if (nomInvovateur.startsWith("<@") && nomInvovateur.endsWith(">") && nomInvovateur.length > 3) {
-                        let idDiscord = nomInvovateur.slice(2, nomInvovateur.length - 1)
+                if (pseudo) {
+                    if (pseudo.startsWith("<@") && pseudo.endsWith(">") && pseudo.length > 3) {
+                        let idDiscord = pseudo.slice(2, pseudo.length - 1)
                         idConfig = configJSON[idDiscord]
                         if (!idConfig) {
                             try {
@@ -69,25 +99,27 @@ module.exports = {
                             }
                             return { embeds: [embedMessage] }
                         }
-                        nomInvovateur = undefined
+                        pseudo = tag = undefined
                     }
                 } else {
                     idConfig = configJSON[interaction.user.id]
                 }
 
-                if (!nomInvovateur) {
+                if (!pseudo) {
                     if (!idConfig) {
                         embedMessage.setTitle("Veuillez remplir un pseudo ou le configurez avec le /profil config")
                         return { embeds: [embedMessage] }
                     } else {
-                        profil = await axios.get("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + idConfig + "?api_key=" + lolkey)
+                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${lolkey}`)
+                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}?api_key=${lolkey}`)
                     }
                 } else {
                     try {
-                        profil = await axios.get("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nomInvovateur + "?api_key=" + lolkey)
+                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
+                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
                     } catch {
                         if (profil == undefined) {
-                            embedMessage.setTitle(`${nomInvovateur} n'est pas un pseudo valide.`)
+                            embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
                             return { embeds: [embedMessage] }
                         }
                     }
@@ -95,15 +127,15 @@ module.exports = {
                 // Fin de la vérification 
 
                 // Récupere le champion (personnage) le plus joué de ce joueur et renvoie une erreur si aucun champion n'a été joué
-                const championPref = await axios.get("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + profil.data.id + "?api_key=" + lolkey)
+                const championPref = await axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.data.puuid}?api_key=${lolkey}`)
                 if (championPref.data[0] == undefined) {
-                    embedMessage.setTitle(`${nomInvovateur} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
+                    embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
                     return { embeds: [embedMessage] }
                 }
 
                 // Récupere le rang et l'image associée au champion préferé
-                const rank = await axios.get("https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + profil.data.id + "?api_key=" + lolkey)
-                const image = "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-tiles/" + championPref.data[0].championId + "/" + championPref.data[0].championId + "000.jpg"
+                const rank = await axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.data.id}?api_key=${lolkey}`)
+                const image = `https://cdn.communitydragon.org/latest/champion/${championPref.data[0].championId}/tile`
 
                 // Deux fonctions pour la couleur du message
                 function componentToHex(c) { let hex = c.toString(16); return hex.length == 1 ? "0" + hex : hex }
@@ -114,8 +146,8 @@ module.exports = {
 
                 // Début de la constuction du message final
                 embedMessage = new EmbedBuilder()
-                    .setAuthor({ name: profil.data.name, iconURL: ("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/" + profil.data.profileIconId + ".jpg"), url: "https://www.op.gg/summoners/euw/" + encodeURI(profil.data.name) })
-                    .setThumbnail("https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-tiles/" + championPref.data[0].championId + "/" + championPref.data[0].championId + "000.jpg")
+                    .setAuthor({ name: `${profilRiot.data.gameName}#${profilRiot.data.tagLine}`, iconURL: (`https://cdn.communitydragon.org/latest/profile-icon/${profil.data.profileIconId}`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.data.gameName)}-${encodeURI(profilRiot.data.tagLine)}` })
+                    .setThumbnail(image)
                     .addFields({ name: "Niveau d'invocateur", value: profil.data.summonerLevel.toString() })
                     .setColor(rgbToHex(rgb[0], rgb[1], rgb[2]))
 
@@ -166,17 +198,18 @@ module.exports = {
             // Sous-commande configurant la première sous-commande
             if (interaction.options.getSubcommand() === 'config') {
 
-                let profil
+                let profil, profilRiot
                 // Vérifie si l'entrée texte de l'utilisateur correspond à un pseudo valide
                 try {
-                    profil = await axios.get("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nomInvovateur + "?api_key=" + lolkey)
+                    profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
+                    profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
                 } catch {
-                    embedMessage.setTitle(`${nomInvovateur} n'est pas un pseudo valide.`)
+                    embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
                     return { embeds: [embedMessage] }
                 }
 
                 if (profil.data.summonerLevel === 1) {
-                    embedMessage.setTitle(`${nomInvovateur} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
+                    embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
                     return { embeds: [embedMessage] }
                 }
                 // Fin de la vérification
@@ -187,7 +220,7 @@ module.exports = {
 
                 // Envoi du message final
                 embedMessage.setColor("#00FF00")
-                    .setTitle(`Le pseudo ${profil.data.name} est validé.`)
+                    .setTitle(`Le pseudo ${profilRiot.data.gameName}#${profilRiot.data.tagLine} est validé.`)
                 return { embeds: [embedMessage] }
             }
         })()

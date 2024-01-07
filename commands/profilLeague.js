@@ -44,19 +44,19 @@ module.exports = {
                         .setDescription("Ton tag ( Ex : NGR Faker#EUW ) ")
                         .setRequired(false))),
     async execute(interaction) {
-
+        
         await interaction.deferReply()
         // La fonction fait appel un API donc sa durée est trop longue pour un simple interaction.reply(), il faut donc le différer
         const result = await (async function () {
-
+            
             // Initialise un message d'erreur
             let embedMessage = new EmbedBuilder()
-                .setColor("#FF0000")
+            .setColor("#FF0000")
             
             // Pour récuperer l'entrée texte de la commande
             let pseudo = interaction.options.getString("pseudo")
             let tag = interaction.options.getString("tag")
-
+            
             // Vérification de la longueur pseudo et tag
             if (!tag){
                 tag = "EUW"
@@ -76,11 +76,11 @@ module.exports = {
                 }
                 return { embeds: [embedMessage] }
             }
-
+            
             // Ouvre le fichier contenant les puuid
             const fichier = "config/configProfil.json"
             const configJSON = JSON.parse(fs.readFileSync(fichier, "utf-8"))
-
+            
             // Sous-commande affichant le profil LoL
             if (interaction.options.getSubcommand() === 'league') {
                 let idConfig, profil, profilRiot
@@ -104,7 +104,7 @@ module.exports = {
                 } else {
                     idConfig = configJSON[interaction.user.id]
                 }
-
+                
                 if (!pseudo) {
                     if (!idConfig) {
                         embedMessage.setTitle("Veuillez remplir un pseudo ou le configurez avec le /profil config")
@@ -125,32 +125,32 @@ module.exports = {
                     }
                 }
                 // Fin de la vérification 
-
+                
                 // Récupere le champion (personnage) le plus joué de ce joueur et renvoie une erreur si aucun champion n'a été joué
                 const championPref = await axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.data.puuid}?api_key=${lolkey}`)
                 if (championPref.data[0] == undefined) {
                     embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
                     return { embeds: [embedMessage] }
                 }
-
+                
                 // Récupere le rang et l'image associée au champion préferé
                 const rank = await axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.data.id}?api_key=${lolkey}`)
                 const image = `https://cdn.communitydragon.org/latest/champion/${championPref.data[0].championId}/tile`
-
+                
                 // Deux fonctions pour la couleur du message
                 function componentToHex(c) { let hex = c.toString(16); return hex.length == 1 ? "0" + hex : hex }
-
+                
                 function rgbToHex(r, g, b) { return Number("0x" + componentToHex(r) + componentToHex(g) + componentToHex(b)) }
-
+                
                 await Vibrant.from(image).getPalette((err, palette) => rgb = palette.Vibrant._rgb)
-
+                
                 // Début de la constuction du message final
                 embedMessage = new EmbedBuilder()
-                    .setAuthor({ name: `${profilRiot.data.gameName}#${profilRiot.data.tagLine}`, iconURL: (`https://cdn.communitydragon.org/latest/profile-icon/${profil.data.profileIconId}`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.data.gameName)}-${encodeURI(profilRiot.data.tagLine)}` })
-                    .setThumbnail(image)
-                    .addFields({ name: "Niveau d'invocateur", value: profil.data.summonerLevel.toString() })
-                    .setColor(rgbToHex(rgb[0], rgb[1], rgb[2]))
-
+                .setAuthor({ name: `${profilRiot.data.gameName}#${profilRiot.data.tagLine}`, iconURL: (`https://cdn.communitydragon.org/latest/profile-icon/${profil.data.profileIconId}`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.data.gameName)}-${encodeURI(profilRiot.data.tagLine)}` })
+                .setThumbnail(image)
+                .addFields({ name: "Niveau d'invocateur", value: profil.data.summonerLevel.toString() })
+                .setColor(rgbToHex(rgb[0], rgb[1], rgb[2]))
+                
                 // Récuperation des rangs pour chaque mode de jeu
                 if (rank.data.length >= 1) {
                     const dicoRank = {
@@ -174,58 +174,58 @@ module.exports = {
                             case "RANKED_SOLO_5x5":
                                 field.name = "Solo/Duo Queue"
                                 break
-                            case "RANKED_FLEX_SR":
-                                field.name = "Classé Flexible"
-                                break
-                            case "RANKED_TFT_DOUBLE_UP":
-                                field.name = "TFT Double Up"
-                                break
-                            case "CHERRY":
-                                field = { name: "Arena", value: winrate + "% de winrate, " + (rankIndividual.wins + rankIndividual.losses) + " parties" }
-                                break
-                            default:
-                                check = false
-                        }
-                        if (check) {
-                            embedMessage.addFields(field)
-                        }
+                                case "RANKED_FLEX_SR":
+                                    field.name = "Classé Flexible"
+                                    break
+                                    case "RANKED_TFT_DOUBLE_UP":
+                                        field.name = "TFT Double Up"
+                                        break
+                                        case "CHERRY":
+                                            field = { name: "Arena", value: winrate + "% de winrate, " + (rankIndividual.wins + rankIndividual.losses) + " parties" }
+                                            break
+                                            default:
+                                                check = false
+                                            }
+                                            if (check) {
+                                                embedMessage.addFields(field)
+                                            }
+                                        }
+                                    } else {
+                                        embedMessage.addFields({ name: "Solo/Duo Queue", value: "Non-classé" + emojiRank["UNRANKED"] })
+                                    }
+                                    return { embeds: [embedMessage] }
+                                }
+                                // Sous-commande configurant la première sous-commande
+                                if (interaction.options.getSubcommand() === 'config') {
+                                    
+                                    let profil, profilRiot
+                                    // Vérifie si l'entrée texte de l'utilisateur correspond à un pseudo valide
+                                    try {
+                                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
+                                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
+                                    } catch {
+                                        embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
+                                        return { embeds: [embedMessage] }
+                                    }
+                                    
+                                    if (profil.data.summonerLevel === 1) {
+                                        embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
+                                        return { embeds: [embedMessage] }
+                                    }
+                                    // Fin de la vérification
+                                    
+                                    // Ajout du pseudo dans le fichier configProfil.json
+                                    configJSON[interaction.user.id] = profil.data.puuid
+                                    fs.writeFileSync(fichier, JSON.stringify(configJSON, null, 2))
+                                    
+                                    // Envoi du message final
+                                    embedMessage.setColor("#00FF00")
+                                    .setTitle(`Le pseudo ${profilRiot.data.gameName}#${profilRiot.data.tagLine} est validé.`)
+                                    return { embeds: [embedMessage] }
+                                }
+                            })()
+                            
+                            console.log(JSON.stringify(result))
+                            await interaction.editReply(result)
+                        },
                     }
-                } else {
-                    embedMessage.addFields({ name: "Solo/Duo Queue", value: "Non-classé" + emojiRank["UNRANKED"] })
-                }
-                return { embeds: [embedMessage] }
-            }
-            // Sous-commande configurant la première sous-commande
-            if (interaction.options.getSubcommand() === 'config') {
-
-                let profil, profilRiot
-                // Vérifie si l'entrée texte de l'utilisateur correspond à un pseudo valide
-                try {
-                    profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
-                    profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
-                } catch {
-                    embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
-                    return { embeds: [embedMessage] }
-                }
-
-                if (profil.data.summonerLevel === 1) {
-                    embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
-                    return { embeds: [embedMessage] }
-                }
-                // Fin de la vérification
-
-                // Ajout du pseudo dans le fichier configProfil.json
-                configJSON[interaction.user.id] = profil.data.puuid
-                fs.writeFileSync(fichier, JSON.stringify(configJSON, null, 2))
-
-                // Envoi du message final
-                embedMessage.setColor("#00FF00")
-                    .setTitle(`Le pseudo ${profilRiot.data.gameName}#${profilRiot.data.tagLine} est validé.`)
-                return { embeds: [embedMessage] }
-            }
-        })()
-
-        console.log(JSON.stringify(result))
-        await interaction.editReply(result)
-    },
-}

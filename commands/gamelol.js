@@ -1,37 +1,36 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandBooleanOption } = require('discord.js')
-
-var subOptions = [
-    new SlashCommandStringOption()
-        .setName("heure")
-        .setDescription("L'heure de la partie ( Ex : 20h10 )")
-        .setRequired(true),
-    new SlashCommandStringOption()
-        .setName("jour")
-        .setDescription("Le jour de la partie ( Ex : 12/02 ), par défaut aujourd'hui.")
-        .setRequired(false),
-    new SlashCommandBooleanOption()
-        .setName("ping")
-        .setDescription("Ping le rôle LoL ?")
-        .setRequired(false)]
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandBooleanOption, Guild, ChannelType } = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("game")
         .setDescription("undefined")
-        .addSubcommand(subcommand => {
+        .addSubcommand(subcommand =>
             subcommand
-                .setName("flex")
-                .setDescription("Organise un partie en flex.")
-            subcommand.options = subOptions
-            return subcommand
-        })
-        .addSubcommand(subcommand => {
-            subcommand
-                .setName("perso")
-                .setDescription("Organise un partie personnalisée.")
-            subcommand.options = subOptions
-            return subcommand
-        }),
+                .setName("lol")
+                .setDescription("Organise une partie sur LoL.")
+                .addStringOption(option =>
+                    option.setName("type")
+                        .setDescription("Type de partie")
+                        .addChoices(
+                            { name: 'Flex', value: 'flex' },
+                            { name: 'Clash', value: 'clash' },
+                            { name: 'Personnalisée', value: 'perso' },
+                        )
+                )
+                .addBooleanOption(option =>
+                    option
+                        .setName("ping")
+                        .setDescription("Ping le rôle LoL ?")
+                        .setRequired(false)
+                )
+                .addChannelOption(option =>
+                    option
+                        .setName("salon")
+                        .setDescription("Salon du rendez-vous")
+                        .setRequired(false)
+                        .addChannelTypes(ChannelType.GuildVoice)
+                )
+        ),
 
     async execute(interaction) {
 

@@ -137,6 +137,12 @@ client.on("messageCreate", message => {
             case "profonde":
                 message.reply("eur")
                 break
+            case "ni":
+                message.reply("gger")
+                break
+            case "nig":
+                message.reply("ger")
+                break
         }
     }
 
@@ -146,7 +152,7 @@ client.on("messageCreate", message => {
         return
     }
     if (message.channelId === "1072205408938246173") {
-        if (message.content != "mdr" || message.attachments.size > 0 || message.stickers.size > 0 || message.mentions.repliedUser != null) {
+        if ((message.content != "mdr" && message.content != "笑") || message.attachments.size > 0 || message.stickers.size > 0 || message.mentions.repliedUser != null) {
             message.delete();
             if (message.author.tag != client.user.tag) {
                 message.author.send("Le salon est drôle, il faut marquer mdr...");

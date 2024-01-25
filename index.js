@@ -278,6 +278,7 @@ client.on(Events.InteractionCreate, async interaction => {
             .setLabel('Se désinscrire')
             .setStyle(ButtonStyle.Danger)
     );
+    let len;
     switch (interaction.customId) {
         case 'boutonngr':
             interaction.member.roles.add('1104446622043209738');
@@ -295,31 +296,31 @@ client.on(Events.InteractionCreate, async interaction => {
             interaction.reply({ content: "Confirmée !", ephemeral: true})
             break;
         case 'inscription':
-            if (interaction.message.embeds[0].fields[3].value.includes(userMention(`${interaction.member.user.id}`))) {
+            len = interaction.message.embeds[0].fields.length - 1;
+            if (interaction.message.embeds[0].fields[len].value.includes(userMention(`${interaction.member.user.id}`))) {
                 interaction.reply({ content: "Tu es déjà inscrit", ephemeral: true })
                 return;
             }
             let inscrit = interaction.message.embeds[0];
             const tempEmbed2 = new EmbedBuilder(inscrit)
-            .setFields([inscrit.fields[0],
-                inscrit.fields[1],
-                inscrit.fields[2],
-                {name: " - Inscrits :", value: inscrit.fields[3].value + `\n${userMention(`${interaction.member.user.id}`)}`}
+            .setFields([
+                ...inscrit.fields.slice(0, len),
+                {name: " - Inscrits :", value: inscrit.fields[len].value + `\n${userMention(`${interaction.member.user.id}`)}`}
             ]);
             interaction.channel.send({embeds: [tempEmbed2], components: [buttonSignIn]})
             interaction.reply({ content: "Inscrit !", ephemeral: true})
             break;
         case 'desinscription':
-            if (!interaction.message.embeds[0].fields[3].value.includes(userMention(`${interaction.member.user.id}`))) {
+            len = interaction.message.embeds[0].fields.length - 1;
+            if (!interaction.message.embeds[0].fields[len].value.includes(userMention(`${interaction.member.user.id}`))) {
                 interaction.reply({ content: "Tu n'es pas inscrit", ephemeral: true })
                 return;
             }
             let desinscrit = interaction.message.embeds[0];
             const tempEmbed3 = new EmbedBuilder(desinscrit)
-            .setFields([desinscrit.fields[0],
-                desinscrit.fields[1],
-                desinscrit.fields[2],
-                {name: " - Inscrits :", value: desinscrit.fields[3].value.replace(userMention(`${interaction.member.user.id}`), `~~${interaction.member.user.username}~~`)}
+            .setFields([
+                ...desinscrit.fields.slice(0, len),
+                {name: " - Inscrits :", value: desinscrit.fields[len].value.replace(userMention(`${interaction.member.user.id}`), `~~${interaction.member.user.username}~~`)}
             ]);
             interaction.channel.send({embeds: [tempEmbed3], components: [buttonSignIn]})
             interaction.reply({ content: "Désinscrit !", ephemeral: true})

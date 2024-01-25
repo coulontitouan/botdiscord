@@ -58,7 +58,7 @@ module.exports = {
                 const [day, month, yearHour] = dateString.split('/');
                 const [year, hourMinute] = yearHour.split(' ');
                 const [hour, minute] = hourMinute.split(':');
-                const parsedDate = new Date(year, month - 1, day, hour, minute);
+                const parsedDate = new Date(year, month - 1, day, hour - 1, minute);
                 return parsedDate;
             } catch {
                 return null;

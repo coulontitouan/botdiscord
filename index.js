@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Events, Partials } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require("discord.js");
 const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
@@ -266,6 +266,18 @@ client.on("guildMemberUpdate", function (oldMember, newMember) {
 
 client.on(Events.InteractionCreate, async interaction => {
     // Complète la commande boutonrole
+    const buttonSignIn = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId('inscription')
+            .setEmoji('<:lol:1128386682513784853>')
+            .setLabel('S\'inscrire')
+            .setStyle(ButtonStyle.Primary),
+        new ButtonBuilder()
+            .setCustomId('desinscription')
+            .setEmoji('<:lol:1128386682513784853>')
+            .setLabel('Se désinscrire')
+            .setStyle(ButtonStyle.Danger)
+    );
     switch (interaction.customId) {
         case 'boutonngr':
             interaction.member.roles.add('1104446622043209738');
@@ -274,6 +286,43 @@ client.on(Events.InteractionCreate, async interaction => {
         case 'boutonjuif':
             interaction.member.roles.add('1061954160557305867');
             interaction.reply({ content: 'T\'es juif maintenant', ephemeral: true })
+            break;
+        case 'confirm':
+            let embed = interaction.message.embeds[0];
+            const tempEmbed = new EmbedBuilder(embed).setFooter(null);
+            embed.footer = { text: "Partie confirmée" };
+            interaction.channel.send({content: "true" in interaction.message.embeds[0].footer ? `${roleMention("1123736136246894662")}` : "" ,embeds: [tempEmbed], components: [buttonSignIn]})
+            interaction.reply({ content: "Confirmée !", ephemeral: true})
+            break;
+        case 'inscription':
+            if (interaction.message.embeds[0].fields[3].value.includes(userMention(`${interaction.member.user.id}`))) {
+                interaction.reply({ content: "Tu es déjà inscrit", ephemeral: true })
+                return;
+            }
+            let inscrit = interaction.message.embeds[0];
+            const tempEmbed2 = new EmbedBuilder(inscrit)
+            .setFields([inscrit.fields[0],
+                inscrit.fields[1],
+                inscrit.fields[2],
+                {name: " - Inscrits :", value: inscrit.fields[3].value + `\n${userMention(`${interaction.member.user.id}`)}`}
+            ]);
+            interaction.channel.send({embeds: [tempEmbed2], components: [buttonSignIn]})
+            interaction.reply({ content: "Inscrit !", ephemeral: true})
+            break;
+        case 'desinscription':
+            if (!interaction.message.embeds[0].fields[3].value.includes(userMention(`${interaction.member.user.id}`))) {
+                interaction.reply({ content: "Tu n'es pas inscrit", ephemeral: true })
+                return;
+            }
+            let desinscrit = interaction.message.embeds[0];
+            const tempEmbed3 = new EmbedBuilder(desinscrit)
+            .setFields([desinscrit.fields[0],
+                desinscrit.fields[1],
+                desinscrit.fields[2],
+                {name: " - Inscrits :", value: desinscrit.fields[3].value.replace(userMention(`${interaction.member.user.id}`), `~~${interaction.member.user.username}~~`)}
+            ]);
+            interaction.channel.send({embeds: [tempEmbed3], components: [buttonSignIn]})
+            interaction.reply({ content: "Désinscrit !", ephemeral: true})
             break;
     }
 })

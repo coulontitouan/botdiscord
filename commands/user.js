@@ -53,8 +53,8 @@ module.exports = {
             let pseudoLol, activite, rejoint, points;
 
             if (configJSON[target.id]) {
-                let profile = await axios.get("https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + configJSON[target.id] + "?api_key=" + lolkey).catch(function (error) { });
-                pseudoLol = profile.data.name
+                let profile = await axios.get("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + configJSON[target.id] + "?api_key=" + lolkey).catch(function (error) { });
+                pseudoLol = `${profile.data.gameName}#${profile.data.tagLine}`
             } else {
                 pseudoLol = "Non renseigné\nUtilise </profil config:1113512693064814644>"
             }

@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough } = require("discord.js");
 const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
@@ -201,16 +201,16 @@ client.on("messageCreate", message => {
 
 client.on("guildMemberUpdate", function (oldMember, newMember) {
 
-    if(newMember.id == "429307989011202048"){
-        if(newMember.nickname == "faux titouan (la ptite soumise)"){
+    if (newMember.id == "429307989011202048") {
+        if (newMember.nickname == "faux titouan (la ptite soumise)") {
             return
         }
         newMember.setNickname("faux titouan (la ptite soumise)")
         return
     }
 
-    if(newMember.id == "766693700050878504"){
-        if(newMember.nickname == "cyprine le voleur de vannes"){
+    if (newMember.id == "766693700050878504") {
+        if (newMember.nickname == "cyprine le voleur de vannes") {
             return
         }
         newMember.setNickname("cyprine le voleur de vannes")
@@ -278,7 +278,6 @@ client.on(Events.InteractionCreate, async interaction => {
             .setLabel('Se désinscrire')
             .setStyle(ButtonStyle.Danger)
     );
-    let len;
     switch (interaction.customId) {
         case 'boutonngr':
             interaction.member.roles.add('1104446622043209738');
@@ -292,39 +291,69 @@ client.on(Events.InteractionCreate, async interaction => {
             let embed = interaction.message.embeds[0];
             const tempEmbed = new EmbedBuilder(embed).setFooter(null);
             embed.footer = { text: "Partie confirmée" };
-            interaction.channel.send({content: "true" in interaction.message.embeds[0].footer ? `${roleMention("1123736136246894662")}` : "" ,embeds: [tempEmbed], components: [buttonSignIn]})
-            interaction.reply({ content: "Confirmée !", ephemeral: true})
+            interaction.message.delete();
+            interaction.channel.send({ content: interaction.message.embeds[0].footer.text.includes("true") ? `${roleMention("1123736136246894662")}` : "", embeds: [tempEmbed], components: [buttonSignIn] })
+            interaction.reply({ content: "Confirmée !", ephemeral: true })
             break;
+        case 'cancel':
+            interaction.message.delete();
+            interaction.reply({ content: "Annulée !", ephemeral: true })
+            break
+        case 'modifier':
+            break
         case 'inscription':
-            len = interaction.message.embeds[0].fields.length - 1;
-            if (interaction.message.embeds[0].fields[len].value.includes(userMention(`${interaction.member.user.id}`))) {
-                interaction.reply({ content: "Tu es déjà inscrit", ephemeral: true })
-                return;
-            }
-            let inscrit = interaction.message.embeds[0];
-            const tempEmbed2 = new EmbedBuilder(inscrit)
-            .setFields([
-                ...inscrit.fields.slice(0, len),
-                {name: " - Inscrits :", value: inscrit.fields[len].value + `\n${userMention(`${interaction.member.user.id}`)}`}
-            ]);
-            interaction.channel.send({embeds: [tempEmbed2], components: [buttonSignIn]})
-            interaction.reply({ content: "Inscrit !", ephemeral: true})
-            break;
         case 'desinscription':
-            len = interaction.message.embeds[0].fields.length - 1;
-            if (!interaction.message.embeds[0].fields[len].value.includes(userMention(`${interaction.member.user.id}`))) {
-                interaction.reply({ content: "Tu n'es pas inscrit", ephemeral: true })
+
+            let len = interaction.message.embeds[0].fields.length - 1;
+            let mention = userMention(`${interaction.member.user.id}`);
+            let raye = strikethrough(`${mention}`);
+            let participantField = interaction.message.embeds[0].fields[len].value;
+            let oldEmbed = interaction.message.embeds[0];
+
+            let condition1 = interaction.customId == 'inscription';
+            let condition2 = participantField.includes(mention) && !(participantField.includes(raye));
+
+            console.log(condition1 ? mention : raye)
+            console.log(condition1 ? "inscription" : "desinscription")
+            console.log("Deja inscrit", condition2)
+            console.log(!(condition1 ^ condition2))
+            if (!(condition1 ^ condition2)) {
+                interaction.reply({ content: `Tu ${condition1 ? 'es déja' : 'n\'es pas'} inscrit`, ephemeral: true })
                 return;
             }
-            let desinscrit = interaction.message.embeds[0];
-            const tempEmbed3 = new EmbedBuilder(desinscrit)
-            .setFields([
-                ...desinscrit.fields.slice(0, len),
-                {name: " - Inscrits :", value: desinscrit.fields[len].value.replace(userMention(`${interaction.member.user.id}`), `~~${interaction.member.user.username}~~`)}
-            ]);
-            interaction.channel.send({embeds: [tempEmbed3], components: [buttonSignIn]})
-            interaction.reply({ content: "Désinscrit !", ephemeral: true})
+            let newValue = condition1 ? // Si on s'inscrit
+                participantField.includes(raye) ? // Si on est déja inscrit
+                    oldEmbed.fields[len].value.replace(raye, mention) : // On deraye
+                    oldEmbed.fields[len].value + `\n${mention}` : // sinon on ajoute
+                oldEmbed.fields[len].value.replace(mention, raye); // si on se desinscrit on raye
+
+            const tempEmbed2 = new EmbedBuilder(oldEmbed)
+                .setFields([
+                    ...oldEmbed.fields.slice(0, len),
+                    { name: " - Inscrits :", value: newValue }
+                ]);
+            interaction.message.edit({ embeds: [tempEmbed2], components: [buttonSignIn] })
+            interaction.reply({ content: `${condition1 ? "I" : "Dési"}nscrit !`, ephemeral: true })
             break;
+        // case 'desinscription':
+        //     len = interaction.message.embeds[0].fields.length - 1;
+        //     if (!interaction.message.embeds[0].fields[len].value.includes(userMention(`${interaction.member.user.id}`))) {
+        //         interaction.reply({ content: "Tu n'es pas inscrit", ephemeral: true })
+        //         return;
+        //     }
+        //     let desinscrit = interaction.message.embeds[0];
+        //     newValue = desinscrit.fields[len].value.replace(
+        //         userMention(`${interaction.member.user.id}`), strikethrough(`${interaction.member.user.id}`)
+        //     )
+        //     const tempEmbed3 = new EmbedBuilder(desinscrit)
+        //         .setFields([
+        //             ...desinscrit.fields.slice(0, len),
+        //             { name: " - Inscrits :", value: newValue }
+        //         ]);
+        //     interaction.message.edit({ embeds: [tempEmbed3], components: [buttonSignIn] })
+        //     interaction.reply({ content: "Désinscrit !", ephemeral: true })
+        //     break;
+
     }
 })
 

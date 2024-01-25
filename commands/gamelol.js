@@ -58,7 +58,7 @@ module.exports = {
                 const [day, month, yearHour] = dateString.split('/');
                 const [year, hourMinute] = yearHour.split(' ');
                 const [hour, minute] = hourMinute.split(':');
-                const parsedDate = new Date(year, month - 1, day, hour - 1, minute);
+                const parsedDate = new Date(year, month - 1, day, hour, minute);
                 return parsedDate;
             } catch {
                 return null;
@@ -78,10 +78,21 @@ module.exports = {
         .addComponents(
             new ButtonBuilder()
                 .setCustomId('confirm')
-                .setEmoji('<:lol:1128386682513784853>')
+                .setEmoji('<:agree:1200004575785140254>')
                 .setLabel('Confirmer')
-                .setStyle(ButtonStyle.Primary)
-        )
+                .setStyle(ButtonStyle.Success))
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId('cancel')
+                .setEmoji('<:disagree:1200004597213827122>')
+                .setLabel('Annuler')
+                .setStyle(ButtonStyle.Danger))
+        .addComponents(
+            new ButtonBuilder()
+                .setCustomId('modifier')
+                .setEmoji('🛠️')
+                .setLabel('Modifier')
+                .setStyle(ButtonStyle.Secondary))
 
         let embed = new EmbedBuilder()
             .setTitle(`${interaction.member.user.username} organise une partie sur LoL !`)
@@ -94,7 +105,6 @@ module.exports = {
                 break
         }
 
-        return interaction.reply({ content: `Confirmation le ${timestamp} en ${mode} dans le salon ${salon} ?`, ephemeral: true, embeds: [embed], components: [boutons] })
-        return interaction.reply({ content: "En cours de développement", ephemeral: true })
+        return interaction.reply({ content: `Confirmation le ${timestamp} en ${mode} dans le salon ${salon} ?`, embeds: [embed], components: [boutons] })
     }
 }

@@ -44,7 +44,6 @@ module.exports = {
                         .setDescription("Ton tag ( Ex : NGR Faker#EUW ) ")
                         .setRequired(false))),
     async execute(interaction) {
-        
         await interaction.deferReply()
         // La fonction fait appel un API donc sa durée est trop longue pour un simple interaction.reply(), il faut donc le différer
         const result = await (async function () {
@@ -54,7 +53,7 @@ module.exports = {
             .setColor("#FF0000")
             
             // Pour récuperer l'entrée texte de la commande
-            let pseudo = interaction.options.getString("pseudo")
+            const pseudo = interaction.options.getString("pseudo")
             let tag = interaction.options.getString("tag")
             
             // Vérification de la longueur pseudo et tag
@@ -78,8 +77,8 @@ module.exports = {
             }
             
             // Ouvre le fichier contenant les puuid
-            const fichier = "config/configProfil.json"
-            const configJSON = JSON.parse(fs.readFileSync(fichier, "utf-8"))
+            const fichier = "./config/configProfil.json"
+            let configJSON = require(`.${fichier}`)
             
             // Sous-commande affichant le profil LoL
             if (interaction.options.getSubcommand() === 'league') {
@@ -88,11 +87,11 @@ module.exports = {
                 // ou bien à un pseudo LoL et si une information manque, renvoie une erreur
                 if (pseudo) {
                     if (pseudo.startsWith("<@") && pseudo.endsWith(">") && pseudo.length > 3) {
-                        let idDiscord = pseudo.slice(2, pseudo.length - 1)
+                        const idDiscord = pseudo.slice(2, pseudo.length - 1)
                         idConfig = configJSON[idDiscord]
                         if (!idConfig) {
                             try {
-                                let pseudoDiscord = await interaction.guild.members.fetch(idDiscord)
+                                const pseudoDiscord = await interaction.guild.members.fetch(idDiscord)
                                 embedMessage.setTitle(`${pseudoDiscord.user.username} n'a pas configuré son nom d'invocateur avec /profil config`)
                             } catch {
                                 embedMessage.setTitle("Cet utilisateur n'existe pas sur Discord.")
@@ -167,8 +166,8 @@ module.exports = {
                     })
                     // Ajout des rangs au message final
                     for (const rankIndividual of rank.data) {
-                        let winrate = Math.round(rankIndividual.wins / (rankIndividual.wins + rankIndividual.losses) * 10000) / 100
-                        let field = { name: "", value: rankIndividual.tier + " " + rankIndividual.rank + " " + rankIndividual.leaguePoints + " LP " + emojiRank[rankIndividual.tier] + " ( " + winrate + "% de winrate )" }
+                        const winrate = Math.round(rankIndividual.wins / (rankIndividual.wins + rankIndividual.losses) * 10000) / 100
+                        const field = { name: "", value: `${rankIndividual.tier} ${rankIndividual.rank} ${rankIndividual.leaguePoints} LP ${emojiRank[rankIndividual.tier]} ( ${winrate}% de winrate )` }
                         check = true
                         switch (rankIndividual.queueType) {
                             case "RANKED_SOLO_5x5":

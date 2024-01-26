@@ -3,7 +3,6 @@ const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
 const remindSchema = require('./schemas/remindSchema.js');
-const { connect } = require('mongoose');
 const client = new Client({
     partials: [
         Partials.Channel,
@@ -15,21 +14,10 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildVoiceStates,
     ],
 
 });
-
-setInterval(async () => {
-    const reminders = await remindSchema.find({});
-    for (const reminder of reminders) {
-        console.log(reminder)
-        if (reminder.Time < Date.now()) {
-            const channel = await client.users.fetch(reminder.User).then(user => user.createDM());
-            await channel.send({ content: `<@${reminder.User}>`, embeds: [{ description: `La partie va bientôt commencer !`, color: 0x00ff00 }] })
-            await remindSchema.deleteOne(reminder);
-        }
-    }
-})
 
 const fichier = "./config/configReglages.json"
 let configJSON = JSON.parse(fs.readFileSync(fichier, "utf-8"));
@@ -39,7 +27,7 @@ module.exports = client
 client.commands = new Map();
 
 const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
+const commandFiles = fs.readdirSync(commandsPath)//.filter(file => file.endsWith(".js"));
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
@@ -231,11 +219,11 @@ client.on(Events.InteractionCreate, async interaction => {
         case 'selectRappel':
             let referenceMessage = (await interaction.message.channel.messages.fetch(interaction.message.reference.messageId))
             let date = referenceMessage.embeds[0].footer.text.split('-')[1] - (60 * parseInt(interaction.values[0]));
-            await remindSchema.create({
-                User: `${interaction.member.user.id}`,
-                Time: new Date(date*1000),
-                id: referenceMessage.id,
-            })
+            // await remindSchema.create({
+            //     User: `${interaction.member.user.id}`,
+            //     Time: new Date(date*1000),
+            //     id: referenceMessage.id,
+            // })
                     // User: `${interaction.member.user.id}`,
                     // Time: new Date(date*1000),
                     // id: referenceMessage.id,

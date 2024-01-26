@@ -1,7 +1,8 @@
-const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, Message } = require("discord.js");
+const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time } = require("discord.js");
 const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
+const remindSchema = require('./schemas/remindSchema.js');
 const client = new Client({
     partials: [
         Partials.Channel,
@@ -31,13 +32,13 @@ const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
-	const filePath = path.join(eventsPath, file);
-	const event = require(filePath);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
-	}
+    const filePath = path.join(eventsPath, file);
+    const event = require(filePath);
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args));
+    }
 }
 
 for (const file of commandFiles) {
@@ -143,9 +144,9 @@ client.on(Events.InteractionCreate, async interaction => {
             break;
         case 'confirm':
             if (! await verifAuteur()) { return }
+            let timestamp = interaction.message.content.split('<t:').pop().split(':R>')[0];
             let embed = interaction.message.embeds[0];
-            const tempEmbed = new EmbedBuilder(embed).setFooter({ text: `${interaction.member.user.id}` });
-            embed.footer = { text: "Partie confirmée" };
+            const tempEmbed = new EmbedBuilder(embed).setFooter({ text: `${interaction.member.user.id}-${timestamp}` });
             interaction.message.delete();
             interaction.channel.send({ content: interaction.message.embeds[0].footer.text.includes("true") ? `${roleMention("1123736136246894662")}` : "", embeds: [tempEmbed], components: [buttonSignIn] })
             interaction.reply({ content: interaction.customId == 'confirm' ? "Confirmée !" : "Annulée !", ephemeral: true })
@@ -192,7 +193,41 @@ client.on(Events.InteractionCreate, async interaction => {
             interaction.reply({ content: `${condition1 ? "I" : "Dési"}nscrit !`, ephemeral: true })
             break;
         case 'rappel':
-            interaction.reply({ content: "Vous receverez un message 15 minutes avant la partie !", ephemeral: true })
+            const select = new ActionRowBuilder()
+                .addComponents(
+                    new StringSelectMenuBuilder()
+                        .setCustomId('selectRappel')
+                        .setPlaceholder('Séléctionnez un temps')
+                        .addOptions(
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel('5 minutes')
+                                .setValue('5'),
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel('15 minutes')
+                                .setValue('15'),
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel('30 minutes')
+                                .setValue('30'),
+                            new StringSelectMenuOptionBuilder()
+                                .setLabel('1 heure')
+                                .setValue('60'),
+                        )
+                );
+            interaction.reply({ content: "Sélectionnez le temps avant la partie pour le rappel :", ephemeral: true, components: [select] });
+            break;
+        case 'selectRappel':
+            let referenceMessage = (await interaction.message.channel.messages.fetch(interaction.message.reference.messageId))
+            let date = referenceMessage.embeds[0].footer.text.split('-')[1] - (60 * parseInt(interaction.values[0]));
+            await remindSchema.create( 
+                {
+                    User: `${interaction.member.user.id}`,
+                    Time: new Date(date*1000),
+                    id: referenceMessage.id,
+                }
+            )
+            interaction.update({ content: `Vous recevrez un message <t:${date}:R>`, ephemeral: true, components: [] });
+            break;
+
     }
 })
 

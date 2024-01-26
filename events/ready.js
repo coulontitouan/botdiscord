@@ -1,10 +1,16 @@
 const { Events } = require('discord.js');
+const { connect } = require('mongoose');
 
 module.exports = {
 	name: Events.ClientReady,
 	once: true,
-	execute(client) {
+	async execute(client) {
         console.log(`${client.user.tag} est prêt!`);
+
+        await connect("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.1", {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
 
         const Guild = client.guilds.cache.get("1017742904753655828");
         let botNumber = 0;

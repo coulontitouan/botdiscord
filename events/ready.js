@@ -1,10 +1,19 @@
 const { Events } = require('discord.js');
+const mongoose = require('mongoose');
 
 module.exports = {
 	name: Events.ClientReady,
 	once: true,
 	async execute(client) {
         console.log(`${client.user.tag} est prêt!`);
+
+        await mongoose.connect(process.env.MONGODB_URI);
+
+        if (mongoose.connect){
+            console.log("Connecté à la base de données !");
+        }else{
+            console.log("Erreur lors de la connexion à la base de données !");
+        }
 
         const Guild = client.guilds.cache.get("1017742904753655828");
         let botNumber = 0;

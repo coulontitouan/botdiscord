@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js")
 const axios = require("axios")
-const { tftkey, lolkey } = require("../config/configCode.json")
 const fs = require('node:fs')
 const Vibrant = require("node-vibrant")
 const emojiRank = {
@@ -109,13 +108,13 @@ module.exports = {
                         embedMessage.setTitle("Veuillez remplir un pseudo ou le configurez avec le /profil config")
                         return { embeds: [embedMessage] }
                     } else {
-                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${lolkey}`)
-                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}?api_key=${lolkey}`)
+                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`)
+                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`)
                     }
                 } else {
                     try {
-                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
-                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
+                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${process.env.LOL_API_KEY}`)
+                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${process.env.LOL_API_KEY}`)
                     } catch {
                         if (profil == undefined) {
                             embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
@@ -126,14 +125,14 @@ module.exports = {
                 // Fin de la vérification 
                 
                 // Récupere le champion (personnage) le plus joué de ce joueur et renvoie une erreur si aucun champion n'a été joué
-                const championPref = await axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.data.puuid}?api_key=${lolkey}`)
+                const championPref = await axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.data.puuid}?api_key=${process.env.LOL_API_KEY}`)
                 if (championPref.data[0] == undefined) {
                     embedMessage.setTitle(`${pseudo}#${tag} ne semble pas déja avoir joué à LoL pas. Vérifiez l'orthographe`)
                     return { embeds: [embedMessage] }
                 }
                 
                 // Récupere le rang et l'image associée au champion préferé
-                const rank = await axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.data.id}?api_key=${lolkey}`)
+                const rank = await axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.data.id}?api_key=${process.env.LOL_API_KEY}`)
                 const image = `https://cdn.communitydragon.org/latest/champion/${championPref.data[0].championId}/tile`
                 
                 // Deux fonctions pour la couleur du message
@@ -200,8 +199,8 @@ module.exports = {
                                     let profil, profilRiot
                                     // Vérifie si l'entrée texte de l'utilisateur correspond à un pseudo valide
                                     try {
-                                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${lolkey}`)
-                                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${lolkey}`)
+                                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${process.env.LOL_API_KEY}`)
+                                        profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${profilRiot.data.puuid}?api_key=${process.env.LOL_API_KEY}`)
                                     } catch {
                                         embedMessage.setTitle(`${pseudo}#${tag} n'est pas un pseudo valide.`)
                                         return { embeds: [embedMessage] }

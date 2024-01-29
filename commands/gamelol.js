@@ -61,13 +61,29 @@ module.exports = {
         const heure_minute = interaction.options.getString("heure")
         const now = new Date();
 
-        let jour, mois, annee, heure, minute, dateEvent, lettre;
-        const regexDate = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])(?:\/\d{4})?$/;
-        const regexHeure = /^(0?[0-9]|1[0-2]|2[0-3])h([0-5][0-9])?$/;
+        let dateEvent, lettre;
         if (date || heure_minute) {
+            const regexRelatifDate = /^((apr[eèé]s[-\s]?)?demain|we|(week([-\s]?)end)|(\+\d+))$/;
+            const regexRelatifHeure = /[\+\-][\d+]/
+            const regexDate = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])(?:\/\d{4})?$/;
+            const regexHeure = /^(2[0-3]|(1|0?)\d)(h([0-5]\d)?|[:\s][0-5]\d)?$/;
+            let jour, mois, annee, heure, minute;
+            let rel = false;
             if (date) {
                 if (regexDate.test(date)) {
                     [jour, mois, annee] = date.length > 5 ? date.split('/') : [...date.split('/'), now.getFullYear()];
+                } else if (regexRelatifDate.test(date)) {
+                    rel = true;
+                    if (date.includes("demain")) {
+                        jour = now.getDate() + 1;
+                        if (date.startsWith("apr")) {
+                            jour += 1;
+                        }
+                    }else if (date.includes("we") || date.includes("week")) {
+                        jour = now.getDate() + (6 - now.getDay());
+                    }else if (date.includes("+")) {
+                        jour = now.getDate() + parseInt(date.substring(1));
+                    }
                 } else {
                     await interaction.reply({ content: "Format de date invalide", ephemeral: true })
                     return
@@ -79,9 +95,22 @@ module.exports = {
                     if (heure < now.getHours() || (heure == now.getHours() && minute < now.getMinutes())) {
                         jour = now.getDate() + 1;
                     }
+                } else if(regexRelatifHeure.test(heure_minute)){
+                    if (heure_minute.startsWith("+")) {
+                        heure = now.getHours() + parseInt(heure_minute.substring(1));
+                        minute = now.getMinutes();
+                    }
+                    else {
+                        heure = now.getHours() - parseInt(heure_minute.substring(1));
+                    }
                 } else {
                     await interaction.reply({ content: "Format d'heure invalide", ephemeral: true })
                     return
+                }
+            }else{
+                if (rel){
+                    heure = now.getHours();
+                    minute = now.getMinutes();
                 }
             }
             
@@ -101,6 +130,11 @@ module.exports = {
             minute = minute ? minute : "00";
 
             dateEvent = new Date(annee, mois-1, jour, heure, minute);
+
+            if (dateEvent < now){
+                await interaction.reply({ content: "Date antérieure à aujourd'hui", ephemeral: true })
+                return
+            }
         }
 
 

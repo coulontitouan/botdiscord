@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const axios = require("axios");
 const fs = require('node:fs');
-const { lolkey } = require("../config/configCode.json");
 const emojiTypeActivites = {
     0: '🎮',
     1: '🎥',
@@ -53,7 +52,7 @@ module.exports = {
             let pseudoLol, activite, rejoint, points;
 
             if (configJSON[target.id]) {
-                let profile = await axios.get("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + configJSON[target.id] + "?api_key=" + lolkey).catch(function (error) { });
+                let profile = await axios.get("https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/" + configJSON[target.id] + "?api_key=" + process.env.LOL_API_KEY).catch(function (error) { });
                 pseudoLol = `${profile.data.gameName}#${profile.data.tagLine}`
             } else {
                 pseudoLol = "Non renseigné\nUtilise </profil config:1113512693064814644>"

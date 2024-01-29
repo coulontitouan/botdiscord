@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, PermissionsBitField } = require('discord.js');
 
 module.exports = {
     name: Events.GuildMemberUpdate,
@@ -18,7 +18,7 @@ module.exports = {
         }
 
         if (!(oldMember._roles.includes('1104446622043209738')) && newMember._roles.includes('1104446622043209738') && !conditionAncienNom) {
-            if (!newMember._roles.includes('1045753047067926628')) {
+            if (!newMember.permissions.has([PermissionsBitField.Flags.Administrator])) {
                 if (newMember.nickname != null) {
                     if (newMember.nickname.length <= 26) {
                         newMember.setNickname('NGR | ' + newMember.nickname)
@@ -33,7 +33,7 @@ module.exports = {
                 }
             }
         } else if (oldMember._roles.includes('1104446622043209738') && !(newMember._roles.includes('1104446622043209738'))) {
-            if (!(newMember._roles.includes('1045753047067926628')) && conditionNouveauNom) {
+            if (!newMember.permissions.has([PermissionsBitField.Flags.Administrator]) && conditionNouveauNom) {
 
                 newMember.setNickname(newMember.nickname.slice(6))
 

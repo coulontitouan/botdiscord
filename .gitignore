@@ -1,8 +1,8 @@
 .npm
 node_modules
 ._*
-config/configCode.json
 .vscode
 package-lock.json
 ssh.key
 .DS_STORE
+.env

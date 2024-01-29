@@ -1,9 +1,9 @@
 const { model, Schema } = require('mongoose');
 
-let remindSchema = new Schema({
+let gameSchema = new Schema({
     User: String,
     Time: Date,
     url: String,
 })
 
-module.exports = model('rappel', remindSchema);
+module.exports = model('partie', gameSchema);

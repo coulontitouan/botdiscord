@@ -1,8 +1,9 @@
 const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time } = require("discord.js");
-const { token } = require("./config/configCode.json");
 const path = require("node:path");
 const fs = require("fs");
 const remindSchema = require('./schemas/remindSchema.js');
+const mongoose = require('mongoose');
+
 const client = new Client({
     partials: [
         Partials.Channel,
@@ -19,10 +20,25 @@ const client = new Client({
 
 });
 
-const fichier = "./config/configReglages.json"
-let configJSON = JSON.parse(fs.readFileSync(fichier, "utf-8"));
-
 module.exports = client
+
+setInterval(async () => {
+    const data = await remindSchema.find();
+    if (data.length == 0) { console.log("bd vide") }
+    for (let i of data) {
+        if (i.Time <= Date.now()) {
+            client.users.fetch(i.User, false).then((user) => {
+                let embed = new EmbedBuilder()
+                    .setTitle("Rappel")
+                    //.setDescription(`Votre rappel pour la partie en ${i.type}, le ${i.date} à ${i.heure} dans le salon ${i.salon}`)
+                    //.setTimestamp()
+                    .setURL(i.url)
+                user.send({embeds: [embed], content:`Votre rappel pour le match ${i.url}`});
+            });
+            await remindSchema.findByIdAndDelete(i._id);
+        }
+    }
+}, 60000)
 
 client.commands = new Map();
 
@@ -219,18 +235,16 @@ client.on(Events.InteractionCreate, async interaction => {
         case 'selectRappel':
             let referenceMessage = (await interaction.message.channel.messages.fetch(interaction.message.reference.messageId))
             let date = referenceMessage.embeds[0].footer.text.split('-')[1] - (60 * parseInt(interaction.values[0]));
-            // await remindSchema.create({
-            //     User: `${interaction.member.user.id}`,
-            //     Time: new Date(date*1000),
-            //     id: referenceMessage.id,
-            // })
-                    // User: `${interaction.member.user.id}`,
-                    // Time: new Date(date*1000),
-                    // id: referenceMessage.id,
+            console.log(`${interaction.member.user.id} - ${new Date(date * 1000)} - ${referenceMessage.url}`)
+            await remindSchema.create({
+                User: `${interaction.member.user.id}`,
+                Time: new Date(date * 1000),
+                url: referenceMessage.url,
+            })
             interaction.update({ content: `Vous recevrez un message <t:${date}:R>`, ephemeral: true, components: [] });
             break;
 
     }
 })
 
-client.login(token);
+client.login(process.env.TOKEN);

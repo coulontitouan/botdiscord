@@ -3,6 +3,7 @@ const path = require("node:path");
 const fs = require("fs");
 const remindSchema = require('./schemas/remindSchema.js');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const client = new Client({
     partials: [

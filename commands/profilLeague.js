@@ -52,7 +52,7 @@ module.exports = {
             .setColor("#FF0000")
             
             // Pour récuperer l'entrée texte de la commande
-            const pseudo = interaction.options.getString("pseudo")
+            let pseudo = interaction.options.getString("pseudo")
             let tag = interaction.options.getString("tag")
             
             // Vérification de la longueur pseudo et tag

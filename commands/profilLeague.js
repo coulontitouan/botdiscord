@@ -189,7 +189,7 @@ module.exports = {
                         }
                     }
                 } else {
-                    embedMessage.addFields({ name: "Solo/Duo Queue", value: "Non-classé" + emojiRank["UNRANKED"] })
+                    embedMessage.addFields({ name: "Solo/Duo Queue", value: `Non-classé ${emojiRank["UNRANKED"]}` })
                 }
                 return { embeds: [embedMessage] }
             }

@@ -72,7 +72,10 @@ for (const file of commandFiles) {
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
-
+    if (interaction.member.user.id == "401794358812344320"){
+        interaction.reply({ content: "Je suis en maintenance" })
+        return;
+    }
     const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {

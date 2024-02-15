@@ -21,7 +21,7 @@ module.exports = {
             })
         }
         interaction.reply({
-            content: `Seuls les admins peuvent pas désactiver le !debanmoi.`,
+            content: `Seuls les admins peuvent désactiver le !debanmoi.`,
             ephemeral: true
         })
     },

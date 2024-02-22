@@ -4,7 +4,7 @@ const client = require("../index.js");
 module.exports = {
     name: Events.GuildMemberUpdate,
     async execute(oldMember, newMember) {
-        const antnyID = '339773674972381184';
+        const antnyID = '366142323966476290';
         const eythurID = '386256159725846529';
 
         if (!(oldMember.permissions.has(PermissionsBitField.Flags.Administrator)) && newMember.permissions.has(PermissionsBitField.Flags.Administrator) && newMember.id === antnyID) {

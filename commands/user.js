@@ -76,15 +76,15 @@ module.exports = {
                         activite += emojiTypeActivites[activity.type] + " " + activity.name + " "
                         switch (activity.name) {
                             case "League of Legends":
-                                if (activity.assets.largeText) {
+                                if (activity.assets) {
                                     activite += "( " + activity.assets.largeText
                                     if (activity.details.includes("(")) {
                                         activite += " - " + activity.details.substring(activity.details.indexOf("(") + 1, activity.details.lastIndexOf(")")) + " ) "
                                     } else {
                                         activite += " ) "
                                     }
-                                } else if (activity.details.includes("Teamfight Tactics")) {
-                                    activite += " ( Teamfight Tactics ) "
+                                } else if (activity.details) {
+                                    activite += activity.details.includes("Teamfight Tactics") ? " ( Teamfight Tactics ) " : ""
                                 }
 
                                 activite += emojiActivite.LOL

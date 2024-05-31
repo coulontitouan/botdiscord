@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js')
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, CommandInteraction, ChatInputCommandInteraction } from 'discord.js'
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('boutonrole')
         .setDescription('Créer le bouton role'),
 
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
 
         // Vérifie si l'utilisateur a les permissions
         if (!interaction.member.permissions.has('Administrator')) {

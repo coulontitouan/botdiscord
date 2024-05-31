@@ -1,9 +1,12 @@
-const { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time } = require("discord.js");
-const path = require("node:path");
-const fs = require("fs");
-const remindSchema = require('./schemas/remindSchema.js');
-const mongoose = require('mongoose');
-require('dotenv').config();
+import { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time } from "discord.js";
+import path from "node:path";
+import fs from "fs";
+import remindSchema from './schemas/remindSchema';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import RemindModel from "./schemas/remindSchema";
+
+dotenv.config();
 
 const client = new Client({
     partials: [
@@ -72,10 +75,6 @@ for (const file of commandFiles) {
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
-    // if (interaction.member.user.id == "401794358812344320"){
-    //     interaction.reply({ content: "Je suis en maintenance" })
-    //     return;
-    // }
     const command = interaction.client.commands.get(interaction.commandName);
 
     if (!command) {

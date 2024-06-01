@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, CommandInteraction, ChatInputCommandInteraction } from 'discord.js'
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, CommandInteraction, ChatInputCommandInteraction, ButtonComponent, ComponentType, TextInputBuilder, PermissionFlagsBits, Permissions, PermissionsBitField, GuildMember } from 'discord.js'
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -6,32 +6,35 @@ module.exports = {
         .setDescription('Créer le bouton role'),
 
     async execute(interaction: ChatInputCommandInteraction) {
-
+        const member = interaction.member as GuildMember;
+        const permissions = member.permissions as PermissionsBitField;
+        
         // Vérifie si l'utilisateur a les permissions
-        if (!interaction.member.permissions.has('Administrator')) {
+        if (permissions.has(PermissionFlagsBits.Administrator)) {
             await interaction.reply({ content: "Permissions manquantes : Administrateur", ephemeral: true })
             return
         }
 
         // Vérifie si le serveur est le bon
-        if (interaction.member.guild.id != "1017742904753655828") {
+        if (member.guild.id != "1017742904753655828") {
             await interaction.reply({ content: "Mauvais serveur", ephemeral: true })
             return
         }
 
+        const boutonngr = new ButtonBuilder()
+            .setCustomId('boutonngr')
+            .setLabel('Devenir un vrai NGR')
+            .setStyle(ButtonStyle.Primary)
+
+        const boutonjuif = new ButtonBuilder()
+            .setCustomId('boutonjuif')
+            .setLabel('Devenir un juif')
+            .setStyle(ButtonStyle.Primary)
+
         // Crée les boutons 
         const boutons = new ActionRowBuilder()
             .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('boutonngr')
-                    .setLabel('Devenir un vrai NGR')
-                    .setStyle(ButtonStyle.Primary)
-            )
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('boutonjuif')
-                    .setLabel('Devenir un juif')
-                    .setStyle(ButtonStyle.Danger)
+                boutonngr,boutonjuif
             )
 
         // Crée l'"embed" message 

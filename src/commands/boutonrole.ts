@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, CommandInteraction, ChatInputCommandInteraction, ButtonComponent, ComponentType, TextInputBuilder, PermissionFlagsBits, Permissions, PermissionsBitField, GuildMember } from 'discord.js'
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits, PermissionsBitField, GuildMember } from 'discord.js'
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,11 +16,12 @@ module.exports = {
         }
 
         // Vérifie si le serveur est le bon
-        if (member.guild.id != "1017742904753655828") {
+        if (member.guild.id === "1017742904753655828") {
             await interaction.reply({ content: "Mauvais serveur", ephemeral: true })
             return
         }
 
+        // Crée les boutons 
         const boutonngr = new ButtonBuilder()
             .setCustomId('boutonngr')
             .setLabel('Devenir un vrai NGR')
@@ -31,11 +32,10 @@ module.exports = {
             .setLabel('Devenir un juif')
             .setStyle(ButtonStyle.Primary)
 
-        // Crée les boutons 
-        const boutons = new ActionRowBuilder()
+        const boutons = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
-                boutonngr,boutonjuif
-            )
+                boutonngr, boutonjuif
+            );
 
         // Crée l'"embed" message 
         const message = new EmbedBuilder()
@@ -44,8 +44,8 @@ module.exports = {
             .setThumbnail("https://i.imgur.com/hdOhUoh.png")
             .setColor(0x2B2D31)
             .addFields({ name: "NGR E-Sports", value: "La meilleure équipe du monde dans les catégories \"Manque de joueurs\" et \"Éclatée au sol\"." })
-            .addFields({ name: "Juif", value: "Bah, tu deviens juif..." })
+            .addFields({ name: "Juif", value: "Bah, tu deviens juif..." });
 
-        await interaction.reply({ embeds: [message], components: [boutons] })
+        await interaction.reply({ embeds: [message], components: [boutons] });
     }
 }

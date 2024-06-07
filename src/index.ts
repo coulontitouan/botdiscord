@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time } from "discord.js";
+import { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time, GuildMember, ChatInputCommandInteraction, ButtonInteraction, ChannelType, MessageReference, Embed, Channel, TextBasedChannel, AnySelectMenuInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction } from "discord.js";
 import path from "node:path";
 import fs from "fs";
 import remindSchema from './schemas/remindSchema';
@@ -20,8 +20,7 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildVoiceStates,
-    ],
-
+    ]
 });
 
 module.exports = client
@@ -31,26 +30,26 @@ setInterval(async () => {
     if (data.length == 0) { console.log("bd vide") }
     for (let i of data) {
         if (i.Time <= Date.now()) {
-            client.users.fetch(i.User, false).then((user) => {
+            client.users.fetch(i.User).then((user) => {
                 let embed = new EmbedBuilder()
                     .setTitle("Rappel")
                     //.setDescription(`Votre rappel pour la partie en ${i.type}, le ${i.date} à ${i.heure} dans le salon ${i.salon}`)
                     //.setTimestamp()
                     .setURL(i.url)
-                user.send({embeds: [embed], content:`Votre rappel pour le match ${i.url}`});
+                user.send({ embeds: [embed], content: `Votre rappel pour le match ${i.url}` });
             });
             await remindSchema.findByIdAndDelete(i._id);
         }
     }
 }, 60000)
 
-client.commands = new Map();
+const commands = new Map();
 
 const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath)//.filter(file => file.endsWith(".js"));
+const commandFiles = fs.readdirSync(commandsPath)
 
 const eventsPath = path.join(__dirname, 'events');
-const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.ts'));
 
 for (const file of eventFiles) {
     const filePath = path.join(eventsPath, file);
@@ -67,7 +66,7 @@ for (const file of commandFiles) {
     const command = require(filePath);
     // Set a new item in the Collection with the key as the command name and the value as the exported module
     if ("data" in command && "execute" in command) {
-        client.commands.set(command.data.name, command);
+        commands.set(command.data.name, command);
     } else {
         console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
@@ -75,7 +74,7 @@ for (const file of commandFiles) {
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
-    const command = interaction.client.commands.get(interaction.commandName);
+    const command = commands.get(interaction.commandName);
 
     if (!command) {
         console.error(`No command matching ${interaction.commandName} was found.`);
@@ -94,8 +93,11 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
-client.on(Events.InteractionCreate, async interaction => {
-    const buttonSignIn = new ActionRowBuilder().addComponents(
+client.on(Events.InteractionCreate, async interactionI => {
+    if (!interactionI.isButton()) return;
+    const interaction = interactionI as ButtonInteraction|AnySelectMenuInteraction;
+    const member = interaction.member as GuildMember;
+    const buttonSignIn = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
             .setCustomId('inscription')
             .setEmoji('<:lol:1128386682513784853>')
@@ -117,7 +119,7 @@ client.on(Events.InteractionCreate, async interaction => {
             .setLabel('Rappel')
             .setStyle(ButtonStyle.Secondary)
     );
-    const buttonsSettings = new ActionRowBuilder().addComponents(
+    const buttonsSettings = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
             .setCustomId('start')
             .setEmoji('▶️')
@@ -141,34 +143,38 @@ client.on(Events.InteractionCreate, async interaction => {
     );
 
     async function verifAuteur(message = interaction.message) {
-        try {
-            if (!message.embeds[0].footer.text.includes(`${interaction.member.user.id}`)) {
-                interaction.reply({ content: "Tu n'es pas l'organisateur de cette partie.", ephemeral: true })
-                return false;
+        const footer = message.embeds[0].footer ?? { text: "" };
+        if (!footer.text.includes(`${member.user.id}`)) {
+            interaction.reply({ content: "Tu n'es pas l'organisateur de cette partie.", ephemeral: true })
+            return false;
+        } else {
+            if (message.reference && interaction.channel) {
+                message = await interaction.channel.messages.fetch(message.reference.messageId ?? "");
+                return verifAuteur(message)
+            } else {
+                return true;
             }
-        } catch {
-            message = await interaction.channel.messages.fetch(message.reference.messageId)
-            return verifAuteur(message)
         }
-        return true;
     };
 
     switch (interaction.customId) {
         case 'boutonngr':
-            interaction.member.roles.add('1104446622043209738');
+            member.roles.add('1104446622043209738');
             interaction.reply({ content: 'Bienvenue dans la team NGR', ephemeral: true });
             break;
         case 'boutonjuif':
-            interaction.member.roles.add('1061954160557305867');
+            member.roles.add('1061954160557305867');
             interaction.reply({ content: 'T\'es juif maintenant', ephemeral: true })
             break;
         case 'confirm':
             if (! await verifAuteur()) { return }
-            let timestamp = interaction.message.content.split('<t:').pop().split(':R>')[0];
+            const content = interaction.message.content ?? "";
+            let timestamp = (content.split('<t:').pop() ?? "").split(':R>')[0];
             let embed = interaction.message.embeds[0];
-            const tempEmbed = new EmbedBuilder(embed).setFooter({ text: `${interaction.member.user.id}-${timestamp}` });
+            const tempEmbed = new EmbedBuilder(embed.toJSON()).setFooter({ text: `${member.user.id}-${timestamp}` });
             interaction.message.delete();
-            interaction.channel.send({ content: interaction.message.embeds[0].footer.text.includes("true") ? `${roleMention("1123736136246894662")}` : "", embeds: [tempEmbed], components: [buttonSignIn] })
+            const channel = interaction.channel as TextBasedChannel;
+            channel.send({ content: (interaction.message.embeds[0].footer ?? { text: "" }).text.includes("true") ? `${roleMention("1123736136246894662")}` : "", embeds: [tempEmbed], components: [buttonSignIn] })
             interaction.reply({ content: interaction.customId == 'confirm' ? "Confirmée !" : "Annulée !", ephemeral: true })
             break
         case 'cancel':
@@ -185,7 +191,7 @@ client.on(Events.InteractionCreate, async interaction => {
         case 'inscription':
         case 'desinscription':
             const fieldInscrits = interaction.message.embeds[0].fields.length - 1;
-            const mentionString = userMention(`${interaction.member.user.id}`);
+            const mentionString = userMention(`${member.user.id}`);
             const rayeString = strikethrough(`${mentionString}`);
             const estInscrit = interaction.message.embeds[0].fields[fieldInscrits].value.includes(mentionString);
             const estRaye = interaction.message.embeds[0].fields[fieldInscrits].value.includes(rayeString);
@@ -194,9 +200,8 @@ client.on(Events.InteractionCreate, async interaction => {
 
             let condition1 = interaction.customId == 'inscription';
 
-            if (!(condition1 ^ (estInscrit && !(estRaye)))) {
-                interaction.reply({ content: `Tu ${condition1 ? 'es déja' : 'n\'es pas'} inscrit.`, ephemeral: true })
-                return;
+            if (!(condition1 !== (estInscrit && !(estRaye)))) {
+                return interaction.reply({ content: `Tu ${condition1 ? 'es déja' : 'n\'es pas'} inscrit.`, ephemeral: true })
             }
             let newValue = condition1 ? // Si on s'inscrit
                 oldEmbed.fields[fieldInscrits].value.includes(rayeString) ? // Si on est déja inscrit
@@ -204,7 +209,7 @@ client.on(Events.InteractionCreate, async interaction => {
                     oldEmbed.fields[fieldInscrits].value + `\n${mentionString}` : // sinon on ajoute
                 oldEmbed.fields[fieldInscrits].value.replace(mentionString, rayeString); // si on se desinscrit on raye
 
-            const tempEmbed2 = new EmbedBuilder(oldEmbed)
+            const tempEmbed2 = new EmbedBuilder(oldEmbed.toJSON())
                 .setFields([
                     ...oldEmbed.fields.slice(0, fieldInscrits),
                     { name: " - Inscrits :", value: newValue }
@@ -213,7 +218,7 @@ client.on(Events.InteractionCreate, async interaction => {
             interaction.reply({ content: `${condition1 ? "I" : "Dési"}nscrit !`, ephemeral: true })
             break;
         case 'rappel':
-            const select = new ActionRowBuilder()
+            const select = new ActionRowBuilder<StringSelectMenuBuilder>()
                 .addComponents(
                     new StringSelectMenuBuilder()
                         .setCustomId('selectRappel')
@@ -236,16 +241,19 @@ client.on(Events.InteractionCreate, async interaction => {
             interaction.reply({ content: "Sélectionnez le temps avant la partie pour le rappel :", ephemeral: true, components: [select] });
             break;
         case 'selectRappel':
-            let referenceMessage = (await interaction.message.channel.messages.fetch(interaction.message.reference.messageId))
-            let date = referenceMessage.embeds[0].footer.text.split('-')[1] - (60 * parseInt(interaction.values[0]));
-            console.log(`${interaction.member.user.id} - ${new Date(date * 1000)} - ${referenceMessage.url}`)
-            await remindSchema.create({
-                User: `${interaction.member.user.id}`,
-                Time: new Date(date * 1000),
-                url: referenceMessage.url,
-            })
-            interaction.update({ content: `Vous recevrez un message <t:${date}:R>`, ephemeral: true, components: [] });
-            break;
+            if (interaction.message.reference) {
+                let referenceMessage = (await interaction.message.channel.messages.fetch(interaction.message.reference.messageId ?? ""))
+                let interactiona = interaction as StringSelectMenuInteraction;
+                let date = parseInt((referenceMessage.embeds[0].footer ?? { text: "" }).text.split('-')[1]) - (60 * parseInt(interactiona.values[0]));
+                console.log(`${member.user.id} - ${new Date(date * 1000)} - ${referenceMessage.url}`)
+                await remindSchema.create({
+                    User: `${member.user.id}`,
+                    Time: new Date(date * 1000),
+                    url: referenceMessage.url,
+                })
+                interaction.update({ content: `Vous recevrez un message <t:${date}:R>`, components: [] });
+                break;
+            }
 
     }
 })

@@ -6,3 +6,4 @@ package-lock.json
 ssh.key
 .DS_STORE
 .env
+build/*

@@ -2,13 +2,13 @@ import { model, Schema, Document, Model } from 'mongoose';
 
 interface IRemind extends Document {
     User: string;
-    Time: Date;
+    Time: number;
     url: string;
 }
 
 const remindSchema: Schema<IRemind> = new Schema({
     User: { type: String, required: true },
-    Time: { type: Date, required: true },
+    Time: { type: Number, required: true },
     url: { type: String, required: true },
 });
 

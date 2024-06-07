@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const axios = require("axios");
-const fs = require('node:fs');
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import axios from "axios";
+import fs from 'node:fs';
 const emojiTypeActivites = {
     0: '🎮',
     1: '🎥',

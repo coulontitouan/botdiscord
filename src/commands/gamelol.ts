@@ -1,4 +1,18 @@
-import { ChatInputCommandInteraction, Guild, GuildMember, SlashCommandBooleanOption, SlashCommandChannelOption, SlashCommandStringOption, SlashCommandSubcommandBuilder, SlashCommandBuilder, time, channelMention, EmbedBuilder, userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js';
+import { ChatInputCommandInteraction, Guild, GuildMember, SlashCommandBuilder, time, channelMention, EmbedBuilder, userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js';
+
+enum modes {
+    FLEX = "Flex",
+    CLASH = "Clash",
+    CUSTOM = "Personnalisée",
+    ARENA = "Arena",
+}
+
+enum dateFormats {
+    D = "D",
+    F = "F",
+    t = "t",
+    R = "R",
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,10 +25,7 @@ module.exports = {
                 .setName("type")
                 .setDescription("Type de partie")
                 .addChoices(
-                    { name: 'Flex', value: 'Flex' },
-                    { name: 'Clash', value: 'Clash' },
-                    { name: 'Personnalisée', value: 'Personnalisée' },
-                    { name: 'Arena', value: 'Arena' },
+                    Object.values(modes).map(mode => { return { name: mode, value: mode } })
                 )
                 .setRequired(true)
             )
@@ -51,75 +62,40 @@ module.exports = {
         }
 
         const mode = interaction.options.getString("type", true);
-        const ping = interaction.options.getBoolean("ping", false);
-        const salon = interaction.options.getChannel("salon", false);
+        const ping = interaction.options.getBoolean("ping", false) ?? false;
+        const salon = interaction.options.getChannel("salon", false) ?? (interaction.member as GuildMember).voice.channel;
         const date = interaction.options.getString("date", false);
         const heure_minute = interaction.options.getString("heure", false);
         const now = new Date();
 
-        let dateEvent, lettre;
+        let dateEvent: Date | null = null, lettre: dateFormats = dateFormats.F;
         if (date || heure_minute) {
-            const regexRelatifDate = /^((apr[eèé]s[-\s]?)?demain|we|(week([-\s]?)end)|(\+\d+))$/;
-            const regexRelatifHeure = /[\+\-][\d+]/
             const regexDate = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])(?:\/\d{4})?$/;
             const regexHeure = /^(2[0-3]|(1|0?)\d)(h([0-5]\d)?|[:\s][0-5]\d)?$/;
             let [jour, mois, annee, heure, minute]: number[] = [];
-            let rel = false;
+
             function getIntoNumber(parts: (string | number)[]) {
                 return parts.map(param => parseInt(param.toString()));
             }
 
             if (date) {
+                lettre = dateFormats.D;
                 if (regexDate.test(date)) {
                     [jour, mois, annee] = getIntoNumber(date.length > 5 ? date.split('/') : [...date.split('/'), now.getFullYear()]);
-                } else if (regexRelatifDate.test(date)) {
-                    rel = true;
-                    if (date.includes("demain")) {
-                        jour = now.getDate() + 1;
-                        if (date.startsWith("apr")) {
-                            jour += 1;
-                        }
-                    } else if (date.includes("we") || date.includes("week")) {
-                        jour = now.getDate() + (6 - now.getDay());
-                    } else if (date.includes("+")) {
-                        jour = now.getDate() + parseInt(date.substring(1));
-                    }
                 } else {
-                    await interaction.reply({ content: "Format de date invalide", ephemeral: true })
-                    return
+                    return await interaction.reply({ content: "Format de date invalide", ephemeral: true })
                 }
             }
             if (heure_minute) {
+                lettre = lettre === dateFormats.D ? dateFormats.F : dateFormats.t;
                 if (regexHeure.test(heure_minute)) {
-                    [heure, minute] = getIntoNumber(heure_minute.split('h'));;
-                    if (heure < now.getHours() || (heure == now.getHours() && minute < now.getMinutes())) {
-                        jour = now.getDate() + 1;
-                    }
-                } else if (regexRelatifHeure.test(heure_minute)) {
-                    if (heure_minute.startsWith("+")) {
-                        heure = now.getHours() + parseInt(heure_minute.substring(1));
-                        minute = now.getMinutes();
-                    }
-                    else {
-                        heure = now.getHours() - parseInt(heure_minute.substring(1));
+                    [heure, minute] = getIntoNumber(heure_minute.split('h'));
+                    if (heure < now.getHours() || (heure === now.getHours() && minute < now.getMinutes())) {
+                        jour = jour ?? now.getDate() + 1;
                     }
                 } else {
                     return await interaction.reply({ content: "Format d'heure invalide", ephemeral: true })
                 }
-            } else {
-                if (rel) {
-                    heure = now.getHours();
-                    minute = now.getMinutes();
-                }
-            }
-
-            if (heure_minute) {
-                lettre = "t";
-                if (date) {
-                    lettre = "F";
-                }
-            } else if (date) {
-                lettre = "D";
             }
 
             jour = jour ?? now.getDate();
@@ -139,7 +115,10 @@ module.exports = {
 
         const fields: { name: string, value: string }[] = [];
         fields.push({ name: " - Type de partie :", value: mode })
-        date || heure_minute ? fields.push({ name: " - Date et heure :", value: time(dateEvent, "F") }) : {}
+        if (dateEvent) {
+            fields.push({ name: " - Date et heure :", value: time(dateEvent, dateFormats.F) })
+        }
+        else dateEvent = now;
         salon ? fields.push({ name: " - Salon :", value: `${channelMention(`${salon.id}`)}` }) : {}
         fields.push({ name: " - Inscrits :", value: `${userMention(`${member.user.id}`)}\n` })
 
@@ -172,11 +151,19 @@ module.exports = {
             .addFields(fields)
             .setFooter({ text: `${ping ? true : false} - ${member.user.id}` })
 
-        switch (mode) {
-            case "flex":
-                break
-        }
-
-        return interaction.reply({ content: `Confirmation ${date ? "le" : "à"} ${time(dateEvent, lettre)} en ${mode} ${salon ? `dans le salon ${salon}` : ""} ? (${time(dateEvent, "R")})`, embeds: [embed], components: [boutons] })
+        // switch (mode) {
+        //     case modes.FLEX:
+        //         break
+        //     case modes.CLASH:
+        //         break
+        //     case modes.CUSTOM:
+        //         break
+        //     case modes.ARENA:
+        //         break
+        //     default:
+        //         return await interaction.reply({ content: "Mode de jeu invalide", ephemeral: true })
+        // }
+        
+        return interaction.reply({ content: `Confirmation ${(date ? "le" : "à") + time(dateEvent, lettre)} en ${mode} ${salon ? `dans le salon ${salon}` : ""} ? (${time(dateEvent, dateFormats.R)})`, embeds: [embed], components: [boutons] })
     }
 }

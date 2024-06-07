@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js')
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
             option.setName('utilisateur')
                 .setDescription('Le nom de l\'utilisateur a ratio')
                 .setRequired(true)),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         // Récupere les 100 derniers messages du salon
         const messagesHistory = await interaction.channel.messages.fetch({ limit: 100 })
 

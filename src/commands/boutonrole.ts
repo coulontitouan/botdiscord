@@ -1,24 +1,23 @@
 import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits, PermissionsBitField, GuildMember } from 'discord.js'
+import { Scopes, AdminEmbed, WrongGuildEmbed } from '../constants.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('boutonrole')
         .setDescription('Créer le bouton role'),
-
+    scope: Scopes.GUILD,
     async execute(interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember;
         const permissions = member.permissions as PermissionsBitField;
         
         // Vérifie si l'utilisateur a les permissions
-        if (permissions.has(PermissionFlagsBits.Administrator)) {
-            await interaction.reply({ content: "Permissions manquantes : Administrateur", ephemeral: true })
-            return
+        if (permissions.has(PermissionFlagsBits.Administrator) || true) {
+            return await interaction.reply({ embeds: [AdminEmbed], ephemeral: true })
         }
 
         // Vérifie si le serveur est le bon
         if (member.guild.id === "1017742904753655828") {
-            await interaction.reply({ content: "Mauvais serveur", ephemeral: true })
-            return
+            return await interaction.reply({ embeds: [WrongGuildEmbed], ephemeral: true })
         }
 
         // Crée les boutons 

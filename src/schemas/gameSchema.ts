@@ -1,9 +1,9 @@
-const { model, Schema } = require('mongoose');
+import { model, Schema } from 'mongoose';
 
-let gameSchema = new Schema({
+const gameSchema = new Schema({
     User: String,
     Time: Date,
     url: String,
 })
 
-module.exports = model('partie', gameSchema);
+export default { schema: model('partie', gameSchema) };

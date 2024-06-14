@@ -1,8 +1,8 @@
-const { Events } = require('discord.js');
+import { Events, GuildMember, VoiceState } from 'discord.js';
 
-module.exports = {
+export default {
     name: Events.VoiceStateUpdate,
-    async execute(oldMember, newMember) {
+    async execute(oldMember:VoiceState, newMember:VoiceState) {
         if (newMember.channelId === '1052305939388170311') {
             (await newMember.guild.members.fetch(newMember.id)).roles.add('1061954160557305867');
         }

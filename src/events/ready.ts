@@ -1,21 +1,18 @@
-const { Events } = require('discord.js');
-const mongoose = require('mongoose');
+import { Client, ClientUser, Events, Guild } from 'discord.js';
+import mongoose from 'mongoose';
 
-module.exports = {
+export default {
 	name: Events.ClientReady,
 	once: true,
-	async execute(client) {
-        console.log(`${client.user.tag} est prêt!`);
+	async execute(client: Client) {
+        const user = client.user as ClientUser;
+        console.log(`${user.tag} est prêt!`);
 
-        await mongoose.connect(process.env.MONGODB_URI);
+        const connected = await mongoose.connect(process.env.MONGODB_URI ?? "");
 
-        if (mongoose.connect){
-            console.log("Connecté à la base de données !");
-        }else{
-            console.log("Erreur lors de la connexion à la base de données !");
-        }
+        console.log(connected ? "Connecté à la base de données !" : "Erreur lors de la connexion à la base de données !")
 
-        const Guild = client.guilds.cache.get("1017742904753655828");
+        const Guild = client.guilds.cache.get("1017742904753655828") as Guild;
         let botNumber = 0;
         const Members = Guild.members.cache.map(member => {
             if (member.user.bot == false) { return member.user.username } botNumber += 1
@@ -27,7 +24,7 @@ module.exports = {
     
         setInterval(() => {
             const status = Members[Math.floor(Math.random() * Members.length)];
-            client.user.setPresence({ activities: [{ name: `${status}`, type: 3 }] });
+            user.setPresence({ activities: [{ name: `${status}`, type: 3 }] });
         }, 10000);
     
         client.users.fetch('524926551431708674').then(livreur => livreur.send("Prêt !"));

@@ -1,12 +1,10 @@
-const { Events } = require('discord.js');
-const client = require("../index.js")
+import { Events, Message } from 'discord.js';
 
-module.exports = {
+export default {
     name: Events.MessageCreate,
-    async execute(message) {
+    async execute(message: Message) {
         if (message.channelId === "1046833762375323769" && !message.system) {
-            message.delete();
-            return
+            return message.delete();
         }
     }
 };

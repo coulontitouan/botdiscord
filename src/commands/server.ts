@@ -1,21 +1,21 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Guild, NonThreadGuildBasedChannel, ChannelType, userMention } from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('serveur')
         .setDescription('Donne les informations sur le serveur'),
-    async execute(interaction) {
+    async execute(interaction: ChatInputCommandInteraction) {
 
         // Récupere le serveur et le bot
-        const guild = interaction.guild
-        let bot = await interaction.guild.members.fetch(interaction.client.application.id)
+        const guild = interaction.guild as Guild
+        let bot = await guild.members.fetch(interaction.client.application.id)
 
         // Compte les salons sans les catégories
         let countChannel = 0
         let salonsRaw = (await guild.channels.fetch())
 
         salonsRaw.forEach(ch => {
-            if (ch.type != 4) {
+            if (ch && ch.type != ChannelType.GuildCategory) {
                 countChannel += 1
             }
         })
@@ -25,19 +25,13 @@ module.exports = {
             .setTitle(guild.name)
             .setDescription("Membres : " + guild.memberCount + "\n"
                 + "Salons : " + countChannel + "\n"
-                + "Propriétaire : " + "<@" + guild.ownerId + ">" + "\n"
+                + "Propriétaire : " + userMention(guild.ownerId) + "\n"
             )
             .setThumbnail(guild.iconURL())
             .setColor(bot.displayHexColor)
 
-        try {
-            let wyatt = await bot.guild.members.fetch('599524864692584454')
-            embed.setFooter({ text: "Il est où Wyatt ?", iconURL: wyatt.user.displayAvatarURL() })
-        }
-        catch (error) {
-            // Si Wyatt n'a pas été trouvé, ne rien faire.
-        }
+        let wyatt = await bot.guild.members.fetch('599524864692584454').then(w => embed.setFooter({ text: "Il est où Wyatt ?", iconURL: w.user.displayAvatarURL() }))
 
-        interaction.reply({ embeds: [embed] })
+        return interaction.reply({ embeds: [embed] })
     },
 };

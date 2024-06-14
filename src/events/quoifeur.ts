@@ -1,9 +1,9 @@
-const { Events } = require('discord.js');
-const fs = require('fs')
+import { Events, Message } from 'discord.js';
+import fs from 'fs';
 
-module.exports = {
+export default {
     name: Events.MessageCreate,
-    async execute(message) {
+    async execute(message: Message) {
         if (message.author.id === '1061982486835515412' || !message.guildId) { return }
 
         const fichier = "./config/configReglages.json"

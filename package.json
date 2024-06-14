@@ -5,10 +5,12 @@
     "dotenv": "^16.4.5",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.1",
-    "node-vibrant": "^3.1.6"
+    "node-vibrant": "^3.1.6",
+    "typescript": "^5.4.5"
   },
   "name": "discord",
   "version": "1.0.0",
+  "type": "module",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",

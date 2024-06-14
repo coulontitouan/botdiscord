@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Guild, GuildMember, roleMention } from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('manque')
         .setDescription('Affiche les rôles qui manque à un utilisateur')

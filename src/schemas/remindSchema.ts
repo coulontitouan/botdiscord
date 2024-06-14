@@ -1,17 +1,9 @@
-import { model, Schema, Document, Model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-interface IRemind extends Document {
-    User: string;
-    Time: number;
-    url: string;
-}
-
-const remindSchema: Schema<IRemind> = new Schema({
+const remindSchema = new Schema({
     User: { type: String, required: true },
-    Time: { type: Number, required: true },
+    Time: { type: Date, required: true },
     url: { type: String, required: true },
 });
 
-const RemindModel: Model<IRemind> = model<IRemind>('rappel', remindSchema);
-
-export default RemindModel;
+export const remindModel = model('partie', remindSchema);

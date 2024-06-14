@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Donne le classement des membres du serveur selon leurs points NGR.'),

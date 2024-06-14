@@ -1,8 +1,8 @@
-const { Events } = require('discord.js');
+import { Events, GuildMember } from 'discord.js';
 
-module.exports = {
+export default {
     name: Events.VoiceStateUpdate,
-    async execute(oldMember, newMember) {
-        // pas encore prète
+    async execute(oldMember:GuildMember, newMember:GuildMember) {
+        // pas encore prête
     },
 };

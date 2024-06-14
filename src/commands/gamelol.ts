@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Guild, GuildMember, SlashCommandBuilder, time, channelMention, EmbedBuilder, userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } from 'discord.js';
+import { ChatInputCommandInteraction, Guild, GuildMember, SlashCommandBuilder, time, channelMention, EmbedBuilder, userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, AutocompleteInteraction } from 'discord.js';
 
 enum modes {
     FLEX = "Flex",
@@ -14,7 +14,17 @@ enum dateFormats {
     R = "R",
 }
 
-module.exports = {
+const DayOfWeek: { [key: number]: string } = {
+    0: "Dimanche",
+    1: "Lundi",
+    2: "Mardi",
+    3: "Mercredi",
+    4: "Jeudi",
+    5: "Vendredi",
+    6: "Samedi"
+};
+
+export default {
     data: new SlashCommandBuilder()
         .setName("game")
         .setDescription("undefined")
@@ -29,11 +39,6 @@ module.exports = {
                 )
                 .setRequired(true)
             )
-            .addBooleanOption(option => option
-                .setName("ping")
-                .setDescription("Ping le rôle LoL ?")
-                .setRequired(false)
-            )
             .addStringOption(option => option
                 .setName("heure")
                 .setDescription("Heure de la partie (format : 00h00 ou 00h)")
@@ -43,15 +48,31 @@ module.exports = {
                 .setName("date")
                 .setDescription("Date de la partie (format : jj/mm/aaaa)")
                 .setRequired(false)
-            )
-            .addChannelOption(option => option
-                .setName("salon")
-                .setDescription("Salon du rendez-vous")
-                .setRequired(false)
-                .addChannelTypes(ChannelType.GuildVoice)
+                .setAutocomplete(true)
             )
         ),
+    async autocomplete(interaction: AutocompleteInteraction) {
+        const focusedValue = interaction.options.getFocused();
+        const dates = [];
+        const now = new Date();
 
+        for (let i = 1; i <= 7; i++) {
+            const nextDate = new Date();
+            nextDate.setDate(now.getDate() + i);
+
+            const day = String(nextDate.getDate()).padStart(2, '0');
+            const month = String(nextDate.getMonth() + 1).padStart(2, '0'); // January is 0!
+            const year = nextDate.getFullYear();
+
+            const formattedDate = `${day}/${month}/${year}`;
+            dates.push({ day: `${DayOfWeek[nextDate.getDay()]}`, date: `${formattedDate}` });
+        }
+        return await interaction.respond(
+            dates
+                .filter(choice => choice.day.toLowerCase().startsWith(focusedValue.toLowerCase()))
+                .map(choice => ({ name: `${choice.date} - ${choice.day}`, value: choice.date }))
+        );
+    },
     async execute(interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember;
         const guild = interaction.guild as Guild;
@@ -62,8 +83,6 @@ module.exports = {
         }
 
         const mode = interaction.options.getString("type", true);
-        const ping = interaction.options.getBoolean("ping", false) ?? false;
-        const salon = interaction.options.getChannel("salon", false) ?? (interaction.member as GuildMember).voice.channel;
         const date = interaction.options.getString("date", false);
         const heure_minute = interaction.options.getString("heure", false);
         const now = new Date();
@@ -119,7 +138,6 @@ module.exports = {
             fields.push({ name: " - Date et heure :", value: time(dateEvent, dateFormats.F) })
         }
         else dateEvent = now;
-        salon ? fields.push({ name: " - Salon :", value: `${channelMention(`${salon.id}`)}` }) : {}
         fields.push({ name: " - Inscrits :", value: `${userMention(`${member.user.id}`)}\n` })
 
         const confirmButton = new ButtonBuilder()
@@ -149,7 +167,7 @@ module.exports = {
             .setTitle(`${member.user.username} organise une partie sur LoL !`)
             .setColor(bot.displayHexColor)
             .addFields(fields)
-            .setFooter({ text: `${ping ? true : false} - ${member.user.id}` })
+            .setFooter({ text: `${member.user.id}` })
 
         // switch (mode) {
         //     case modes.FLEX:
@@ -163,7 +181,7 @@ module.exports = {
         //     default:
         //         return await interaction.reply({ content: "Mode de jeu invalide", ephemeral: true })
         // }
-        
-        return interaction.reply({ content: `Confirmation ${(date ? "le" : "à") + time(dateEvent, lettre)} en ${mode} ${salon ? `dans le salon ${salon}` : ""} ? (${time(dateEvent, dateFormats.R)})`, embeds: [embed], components: [boutons] })
+
+        return interaction.reply({ content: `Confirmation ${(date ? "le" : "à") + time(dateEvent, lettre)} en ${mode} ? (${time(dateEvent, dateFormats.R)})`, embeds: [embed], components: [boutons] })
     }
 }

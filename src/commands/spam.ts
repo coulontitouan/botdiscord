@@ -1,6 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js');
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder()
 		.setName('spam')
 		.setDescription('Spam un utilisateur')
@@ -8,7 +8,7 @@ module.exports = {
             option.setName('utilisateur')
                 .setDescription('Le nom de l\'utilisateur a spam')
     			.setRequired(true)),
-	async execute(interaction) {
+	async execute(interaction: ChatInputCommandInteraction) {
         interaction.reply("pas encore faite")
 	},
 };

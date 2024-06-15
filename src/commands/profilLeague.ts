@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMe
 import axios from "axios"
 import fs from 'node:fs'
 import Vibrant from "node-vibrant"
-import configJSON from "../../config/configProfil.json" assert { type: "json" };
+import configJSON from "../../config/configProfil.json" with { type: "json" };
 import { errorEmbed } from "../constants.js";
 const fichier = "../../config/configProfil.json";
 
@@ -123,7 +123,7 @@ export default {
                     if (!idConfig) {
                         return await interaction.editReply({ embeds: [errorEmbed("Utilisateur non configuré", "Veuillez remplir un pseudo ou le configurez avec le /profil config")] })
                     } else {
-                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`).then((response) => response.data);
+                        profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`).then(response => response.data);
                         profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`)
                     }
                 } else {

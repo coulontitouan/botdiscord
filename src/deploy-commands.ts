@@ -37,6 +37,9 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
 	}
 })();
 
-// rest.delete(Routes.applicationCommand(process.env.CLIENT_ID as string, '1200242529958907987')) 
-// 	.then(() => console.log('Successfully deleted application command'))
-// 	.catch(console.error);
+// const allcommands: any[] = await rest.get(Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string)) as any[];
+// for (const command of allcommands) {
+// 	rest.delete(Routes.applicationGuildCommand(process.env.CLIENT_ID as string, process.env.GUILD_ID as string, command.id)) 
+// 		.then(() => console.log('Successfully deleted application command'))
+// 		.catch(console.error)
+//  }

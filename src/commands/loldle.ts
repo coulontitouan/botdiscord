@@ -1,14 +1,7 @@
-import axios from "axios";
-import { ChannelType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, AttachmentBuilder, chatInputApplicationCommandMention } from "discord.js";
-
-interface Champion {
-    id: string
-    key: string
-    name: string
-    title: string
-    tags: string[2]
-    partype: string
-}
+import { ChannelType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, AttachmentBuilder, chatInputApplicationCommandMention, time } from "discord.js";
+import { LolDleGame } from "../loldleGame.js";
+import { confirmEmbed } from "../lib/embeds/confirmEmbed.js";
+import { errorEmbed } from "../lib/embeds/errorEmbed.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -73,24 +66,34 @@ export default {
         interaction.reply({ content: `Configuration du LolDle : ${subcommand} ${channel} ${time}`, ephemeral: true });
     },
     async guess(interaction: ChatInputCommandInteraction) {
+        const currentChampion = LolDleGame.champion;
         const reponse = interaction.options.getString('reponse', true);
-        const { currentChampion } = await import("../index.js");
-        return interaction.reply({ content: `${currentChampion.id}`, ephemeral: true });
-        if (reponse.toLowerCase() === currentChampion.toString().toLowerCase()) {
-            interaction.reply({ content: 'Bravo !', ephemeral: true });
+        if (LolDleGame.answered.includes(interaction.user.id)) {
+            return interaction.reply({ content: 'Vous avez déjà répondu à ce LolDle !', ephemeral: true });
         } else {
-            interaction.reply({ content: 'Dommage !', ephemeral: true });
+            LolDleGame.answered.push(interaction.user.id);
+            let embed;
+            if (reponse.toLowerCase() === currentChampion.name.toLowerCase()) {
+                embed = confirmEmbed({
+                    title: "Réponse correcte !",
+                    description: `La réponse était bien ${currentChampion.name} !`
+                });
+            } else {
+                embed = errorEmbed({
+                    title: "Réponse incorrecte !",
+                    description: `La réponse était ${currentChampion.name} !`
+                });
+            }
+            return interaction.reply({ embeds: [embed], ephemeral: true });
         }
     },
     async get(interaction: ChatInputCommandInteraction) {
-        const version: string = await axios.get('https://ddragon.leagueoflegends.com/api/versions.json').then(
-            response => response.data[0]
-        );
-        const { currentChampion } = await import("../index.js");
-        const file = new AttachmentBuilder(await axios.get(`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${currentChampion.id}.png`, { responseType: 'arraybuffer' }).then(response => response.data)).setName(`${currentChampion.key}.png`);
+        const difficulty = 3; // interaction.options.getInteger('difficulty', false) ?? 3;
+        const file = new AttachmentBuilder(await LolDleGame.todayImage(difficulty))
+            .setName(`${Math.floor(new Date().getTime() / 86400000) * 86400}.png`);
         const LoLDleEmbed = new EmbedBuilder()
             .setColor(0x2B2D31)
-            .setTitle('LolDle du jour')
+            .setTitle(`LolDle du ${time(new Date(), "D")}`)
             .setDescription('Qui suis-je ?')
             .addFields({ name: 'Répondez avec', value: chatInputApplicationCommandMention("loldle", "guess", interaction.commandId), inline: true })
             .setImage(`attachment://${file.name}`);

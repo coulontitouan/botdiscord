@@ -1,5 +1,5 @@
 import { MessageComponentInteraction } from 'discord.js';
-import { verifAuteur } from '../lib/functions.js';
+import verifAuteur from '../lib/functions/verifAuteur.js';
 
 export default {
     name: "cancel",

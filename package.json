@@ -1,11 +1,13 @@
 {
   "dependencies": {
     "axios": "^1.3.4",
+    "canvas": "^2.11.2",
     "discord.js": "^14.11.0",
     "dotenv": "^16.4.5",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.1",
     "node-vibrant": "^3.1.6",
+    "sharp": "^0.33.4",
     "typescript": "^5.4.5"
   },
   "name": "mordekaiser",
@@ -23,7 +25,6 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
-    "@types/mongoose": "^5.11.97",
     "@types/node": "^20.14.0",
     "nodemon": "^3.1.3",
     "ts-node": "^10.9.2"

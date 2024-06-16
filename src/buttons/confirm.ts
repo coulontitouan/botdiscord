@@ -1,5 +1,5 @@
 import { EmbedBuilder, GuildMember, MessageComponentInteraction, TextBasedChannel, roleMention } from 'discord.js';
-import { verifAuteur } from '../lib/functions.js';
+import verifAuteur from '../lib/functions/verifAuteur.js';
 import { gameSignIn } from '../lib/buttons/gameSignIn.js';
 
 export default {

@@ -4,7 +4,7 @@ import fs from "fs";
 import dotenv from 'dotenv';
 import { remindModel } from "./schemas/remindSchema.js";
 import { fileURLToPath, pathToFileURL } from 'url';
-import axios from "axios";
+import { LolDleGame } from "./loldleGame.js";
 
 dotenv.config();
 
@@ -145,32 +145,7 @@ setInterval(async () => {
     }
 }, 60000)
 
-
-interface Champion {
-    id: string
-    key: string
-    name: string
-    title: string
-    tags: string[]
-    partype: string
-}
-
-export var currentChampion: Champion;
-
-export async function updateChampion(version: string) {
-    const champions: Champion[] = await axios.get(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`)
-        .then(response => Object.values(response.data.data))
-        .catch(error => ([{ id: "", key: "", name: "", title: "", tags: [""], partype: "" }])) as Champion[];
-    const randomChampion = champions[Math.floor(Math.random() * champions.length)];
-    currentChampion = randomChampion;
-    console.log(currentChampion.name);
-}
-
-const version: string = await axios.get('https://ddragon.leagueoflegends.com/api/versions.json').then(
-    response => response.data[0]
-);
-
-updateChampion(version);
-setInterval(updateChampion, 24*60*60*1000, version)
+await LolDleGame.newChampion();
+setInterval(() => LolDleGame.newChampion(), 24 * 60 * 60 * 1000)
 
 client.login(process.env.TOKEN);

@@ -1,5 +1,5 @@
 import { MessageComponentInteraction } from 'discord.js';
-import { verifAuteur } from '../lib/functions.js';
+import verifAuteur from '../lib/functions/verifAuteur.js';
 import { gameSettings } from '../lib/buttons/gameSettings.js';
 
 export default {

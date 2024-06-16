@@ -1,6 +1,6 @@
 import { GuildMember, Message, MessageComponentInteraction } from "discord.js";
 
-export async function verifAuteur(interaction: MessageComponentInteraction, message:Message|undefined = undefined) {
+export default async function verifAuteur(interaction: MessageComponentInteraction, message:Message|undefined = undefined) {
     if (!message) 
         message = interaction.message;
     const member = interaction.member as GuildMember;

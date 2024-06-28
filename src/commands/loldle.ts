@@ -29,6 +29,20 @@ export default {
                     .setRequired(true)
                 )
             )
+            .addSubcommand(subcommand => subcommand
+                .setName('difficulty')
+                .setDescription("Permet de configurer la difficulté du LolDle")
+                .addIntegerOption(option => option
+                    .setName('difficulty')
+                    .setDescription("La difficulté du LolDle (1, 2 ou 3)")
+                    .setRequired(true)
+                    .addChoices([
+                        {name:'Facile',value: 1},
+                        {name:'Moyen', value: 2},
+                        {name:'Difficile', value: 3}
+                    ])
+                )
+            )
         )
         .addSubcommand(subcommand => subcommand
             .setName('guess')
@@ -44,26 +58,40 @@ export default {
             .setDescription('Renvoie le message du LolDle du jour')
         ),
     async execute(interaction: ChatInputCommandInteraction) {
-        switch (interaction.options.getSubcommand(true)) {
+        switch (interaction.options.getSubcommandGroup()) {
             case 'config':
                 await this.config(interaction);
                 break;
-            case 'guess':
-                await this.guess(interaction);
-                break;
-            case 'get':
-                await this.get(interaction);
-                break;
             default:
+                switch (interaction.options.getSubcommand(true)) {
+                    case 'guess':
+                        await this.guess(interaction);
+                        break;
+                    case 'get':
+                        await this.get(interaction);
+                        break;
+                }
                 break;
         }
     },
     async config(interaction: ChatInputCommandInteraction) {
-        const subcommand = interaction.options.getSubcommand(true);
-        const member = interaction.member as GuildMember;
-        const channel = interaction.options.getChannel('channel', true);
-        const time = interaction.options.getString('time', true);
-        interaction.reply({ content: `Configuration du LolDle : ${subcommand} ${channel} ${time}`, ephemeral: true });
+        switch (interaction.options.getSubcommand(true)) {
+            case 'channel':
+                // await this.configChannel(interaction);
+                break;
+            case 'time':
+                // await this.configTime(interaction);
+                break;
+            case 'difficulty':
+                // await this.configDifficulty(interaction);
+                break;
+            default:
+                interaction.reply({ content: 'Sous-commande inconnue', ephemeral: true });
+                break;
+        }
+        const channel = interaction.options.getChannel('channel');
+        const time = interaction.options.getString('time');
+        interaction.reply({ content: `Configuration du LolDle : ${channel} ${time}`, ephemeral: true });
     },
     async guess(interaction: ChatInputCommandInteraction) {
         const currentChampion = LolDleGame.champion;

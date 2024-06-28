@@ -22,6 +22,7 @@ interface SummonerProfile {
     revisionDate: number,
     summonerLevel: number
 }
+
 function customFormatting(id: string, name: string) {
     return formatEmoji({
         id: id as Snowflake,

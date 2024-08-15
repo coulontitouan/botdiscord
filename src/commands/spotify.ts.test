@@ -52,31 +52,31 @@ export default {
 
         // Choose the highest quality audio format
         const audioFormat = ytdl.chooseFormat(info.formats, {
-          quality: "highestaudio",
+            quality: "highestaudio",
         });
-    
+
         // Get audio stream and process it
         const audioStream = ytdl.downloadFromInfo(info, { format: audioFormat });
         const buffer = new Promise((resolve, reject) => {
             const mp3Buffer = [];
             const outputStream = new PassThrough();
             outputStream.on("error", (err) => {
-              reject(err);
+                reject(err);
             });
             outputStream.on("end", () => {
-              const finalBuffer = Buffer.concat(mp3Buffer);
-              resolve(finalBuffer);
+                const finalBuffer = Buffer.concat(mp3Buffer);
+                resolve(finalBuffer);
             });
-      
+
             audioStream.pipe(outputStream);
             outputStream.on("data", (chunk) => {
-              mp3Buffer.push(chunk);
+                mp3Buffer.push(chunk);
             });
-      
+
             outputStream.on("error", (err) => {
-              reject(err);
+                reject(err);
             });
-          });
+        });
 
         const embed = new EmbedBuilder()
             .setTitle(track.name)

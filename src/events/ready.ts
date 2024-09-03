@@ -28,6 +28,6 @@ export default {
             user.setPresence({ activities: [{ name: `${status}`, type: 3 }] });
         }, 10000);
 
-        client.users.fetch('524926551431708674').then(livreur => livreur.send("Prêt !"));
+        // client.users.fetch('524926551431708674').then(livreur => livreur.send("Prêt !"));
     },
 };

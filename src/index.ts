@@ -147,5 +147,6 @@ setInterval(async () => {
 
 await LolDleGame.newChampion();
 setInterval(() => LolDleGame.newChampion(), 24 * 60 * 60 * 1000)
+console.log(await LolDleGame.getAllChampions())
 
 client.login(process.env.TOKEN);

@@ -1,4 +1,4 @@
-import { ChannelType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, AttachmentBuilder, chatInputApplicationCommandMention, time } from "discord.js";
+import { ChannelType, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, AttachmentBuilder, chatInputApplicationCommandMention, time, AutocompleteInteraction } from "discord.js";
 import { LolDleGame } from "../loldleGame.js";
 import { confirmEmbed } from "../lib/embeds/confirmEmbed.js";
 import { errorEmbed } from "../lib/embeds/errorEmbed.js";
@@ -49,14 +49,26 @@ export default {
             .setDescription('Permet de répondre au LolDle du jour')
             .addStringOption(option => option
                 .setName('reponse')
-                .setDescription('La réponse au LolDle du jour')
+                .setDescription('Ta réponse au LolDle du jour')
                 .setRequired(true)
+                .setAutocomplete(true)
             )
         )
         .addSubcommand(subcommand => subcommand
             .setName('get')
             .setDescription('Renvoie le message du LolDle du jour')
         ),
+    async autocomplete(interaction: AutocompleteInteraction) {
+            const focusedValue = interaction.options.getFocused();
+            const champions = await LolDleGame.getAllChampions();
+
+            return await interaction.respond(
+                champions
+                    .filter(choice => choice.toLowerCase().match(focusedValue.toLowerCase().split('').join('.*')))
+                    .map(choice => ({ name: choice, value: choice }))
+                    .slice(0, 25)
+            );
+        },
     async execute(interaction: ChatInputCommandInteraction) {
         switch (interaction.options.getSubcommandGroup()) {
             case 'config':

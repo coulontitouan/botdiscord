@@ -29,6 +29,14 @@ export class LolDleGame {
         );
     }
 
+    static async getAllChampions() {
+        await this.updateVersion();
+        return await axios.get(`https://ddragon.leagueoflegends.com/cdn/${this.version}/data/fr_FR/champion.json`).then(response => {
+            return Object.values<Champion>(response.data.data).map((champion: Champion) => champion.name);
+        }
+        );
+    }
+
     static async newChampion() {
         this.answered = [];
         await this.updateVersion();

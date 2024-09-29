@@ -8,12 +8,7 @@ export default {
             .setName('utilisateur')
             .setDescription('L\'utilisateur dont il faut vérifier les rôles')
         ),
-
-    async execute(interaction: ChatInputCommandInteraction) {
-        const guild = interaction.guild as Guild;
-        let user = (interaction.options.getMember("utilisateur") ?? interaction.member) as GuildMember;
-        console.log(user)
-
+    async getEmbed(guild: Guild, user: GuildMember) {
         let nom = user.nickname ?? user.user.username;
 
         let embed = new EmbedBuilder()
@@ -30,7 +25,7 @@ export default {
 
         for (let role of Object.keys(roleGuild)) {
             if (!user.roles.resolve(role)) {
-                embed.setDescription(`${embed.data.description}\n${roleMention(role)}`)
+                embed.setDescription(`${embed.data.description ?? ""}\n${roleMention(role)}`)
             }
             else {
                 delete roleGuild[role]
@@ -45,7 +40,12 @@ export default {
         else {
             embed.setTitle(`${embed.data.title}(${nombreDeRoles}) :`)
         }
-        // Envoi du message
+        return embed
+    },
+    async execute(interaction: ChatInputCommandInteraction) {
+        const guild = interaction.guild as Guild;
+        let user = (interaction.options.getMember("utilisateur") ?? interaction.member) as GuildMember;
+        let embed = await this.getEmbed(guild, user)
         interaction.reply({ embeds: [embed] })
     },
 };

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, Partials, roleMention, userMention, EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, strikethrough, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, time, GuildMember, ChatInputCommandInteraction, ButtonInteraction, ChannelType, MessageReference, Embed, Channel, TextBasedChannel, AnySelectMenuInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction, MessageComponent, MessageComponentInteraction } from "discord.js";
+import { Client, GatewayIntentBits, Events, Partials, EmbedBuilder } from "discord.js";
 import path from "node:path";
 import fs from "fs";
 import dotenv from 'dotenv';
@@ -43,13 +43,13 @@ for (const file of eventFiles) {
 }
 
 const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath)
+const commandFiles = fs.readdirSync(commandsPath, { recursive: true, withFileTypes: true }).filter(file => file.isFile() && file.name.endsWith('.js'));
 
 const commands = new Map();
 const autocompleteMap = new Map();
 
 for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
+    const filePath = path.join(file.parentPath, file.name);
     const fileUrl = pathToFileURL(filePath).href;
     const { default: command } = await import(fileUrl);
     // Set a new item in the Collection with the key as the command name and the value as the exported module
@@ -78,9 +78,8 @@ for (const file of buttonsFiles) {
     }
 }
 
-
 client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isCommand()) return;
     const command = commands.get(interaction.commandName);
 
     if (!command) {
@@ -147,6 +146,5 @@ setInterval(async () => {
 
 await LolDleGame.newChampion();
 setInterval(() => LolDleGame.newChampion(), 24 * 60 * 60 * 1000)
-console.log(await LolDleGame.getAllChampions())
 
 client.login(process.env.TOKEN);

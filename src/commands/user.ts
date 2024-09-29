@@ -1,6 +1,8 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, ColorResolvable, Colors } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, ColorResolvable, Colors, chatInputApplicationCommandMention } from 'discord.js';
 import axios from "axios";
 import fs from 'node:fs';
+import profilLeague from './profilLeague.js';
+import getCommandId from '../lib/functions/getCommandId.js';
 const emojiTypeActivites = {
     0: '🎮',
     1: '🎥',
@@ -41,13 +43,13 @@ export default {
         fichier = "config/configPoints.json"
         const configPoints = JSON.parse(fs.readFileSync(fichier, "utf-8"));
 
-        let pseudoLol, activite, rejoint, points;
+        let pseudoLol, rejoint, points;
 
         if (configJSON[target.id]) {
             const profile: { data: { puuid: string, gameName: string, tagLine: string } } = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${configJSON[target.id]}?api_key=${process.env.LOL_API_KEY}`);
             pseudoLol = `${profile.data.gameName}#${profile.data.tagLine}`
         } else {
-            pseudoLol = "Non renseigné\nUtilise </profil config:1113512693064814644>"
+            pseudoLol = `Non renseigné\nUtilise ${chatInputApplicationCommandMention("profil", "config", await getCommandId(profilLeague.data))} pour renseigner ton pseudo.`
         }
 
         if (configPoints[target.id]) {

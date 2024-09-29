@@ -1,11 +1,17 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMember, Guild, MessageMentions, APIEmbedField, formatEmoji, Snowflake, userMention, chatInputApplicationCommandMention } from "discord.js"
+import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMember, MessageMentions, APIEmbedField, formatEmoji, Snowflake, userMention, chatInputApplicationCommandMention, Routes, REST } from "discord.js"
 import axios from "axios"
 import fs from 'node:fs'
 import Vibrant from "node-vibrant"
 import configJSON from "../../config/configProfil.json" with { type: "json" };
 import { errorEmbed } from "../lib/embeds/errorEmbed.js";
 import { confirmEmbed } from "../lib/embeds/confirmEmbed.js";
+import { LolDleGame } from "../loldleGame.js";
+import getCommandId from "../lib/functions/getCommandId.js";
 const fichier = "config/configProfil.json";
+
+const axiosInstanceRiot = axios.create({
+    headers: { "X-Riot-Token": process.env.LOL_API_KEY }
+});
 
 type ConfigKeys = keyof typeof configJSON;
 interface RiotProfile {
@@ -21,6 +27,12 @@ interface SummonerProfile {
     profileIconId: number,
     revisionDate: number,
     summonerLevel: number
+}
+
+interface commandOptions {
+    pseudo: string,
+    tag: string,
+    discordId: string
 }
 
 function customFormatting(id: string, name: string) {
@@ -52,6 +64,7 @@ const rankedMode: { [key in rankedName]: { id: string, name: string } } = {
     [rankedName.CHERRY]: { id: "CHERRY", name: "Arena" },
     [rankedName.RANKED_TFT_DOUBLE_UP]: { id: "RANKED_TFT_DOUBLE_UP", name: "TFT Double Up" }
 }
+
 export default {
     data: new SlashCommandBuilder()
         .setName("profil")
@@ -83,13 +96,9 @@ export default {
 
         await interaction.deferReply();
 
-        // La fonction fait appel un API donc sa durée est trop longue pour un simple interaction.reply(), il faut donc le différer
-
-        // Pour récuperer l'entrée texte de la commande
         let pseudo = interaction.options.getString("pseudo") ?? userMention(member.id);
         let tag = interaction.options.getString("tag", false) ?? "EUW";
 
-        // Vérification de la longueur pseudo et tag
         let embed;
         if (!pseudo.match(/^.{3,16}$/) && !(pseudo.match(MessageMentions.UsersPattern))) {
             embed = errorEmbed({
@@ -108,113 +117,99 @@ export default {
         }
 
         switch (interaction.options.getSubcommand()) {
-            // Sous-commande affichant le profil LoL
             case 'league':
-                await this.league(interaction, pseudo, tag);
-                break;
-            // Sous-commande configurant la première sous-commande
+                embed = await this.league({ pseudo: pseudo, tag: tag, discordId: interaction.user.id });
+
+                return await interaction.editReply({ embeds: [embed] });
             case 'config':
-                await this.config(interaction, pseudo, tag);
-                break;
+                embed = errorEmbed({
+                    description: `Impossible de configurer le pseudo ${pseudo}#${tag}.`
+                })
+                let res = await this.config({ pseudo: pseudo, tag: tag, discordId: interaction.user.id }, embed);
+
+                if (res) {
+                    configJSON[interaction.user.id as ConfigKeys] = res.puuid
+                    fs.writeFileSync(fichier, JSON.stringify(configJSON, null, 2))
+
+                    embed = confirmEmbed({
+                        title: `Le pseudo ${res.gameName}#${res.tagLine} est validé.`,
+                        description: `Vous pouvez désormais utiliser la commande ${chatInputApplicationCommandMention("profil", "league", await getCommandId(this.data))} sans préciser de pseudo.`
+                    })
+                }
+
+                return await interaction.editReply({ embeds: [embed] })
         }
     },
-    async config(interaction: ChatInputCommandInteraction, pseudo: string, tag: string) {
-        let embed: EmbedBuilder;
-
+    async config(options: commandOptions, embed: EmbedBuilder): Promise<false | { gameName: string, tagLine: string, puuid: string }> {
         var profil: SummonerProfile | null;
         var profilRiot: RiotProfile | null;
 
-        // Vérifie si l'entrée texte de l'utilisateur correspond à un pseudo valide
-        [profilRiot, profil] = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${process.env.LOL_API_KEY}`)
+        [profilRiot, profil] = await axiosInstanceRiot.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${options.pseudo}/${options.tag}`)
             .then(async (response) =>
                 [
                     response.data,
-                    await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${response.data.puuid}?api_key=${process.env.LOL_API_KEY}`)
+                    await axiosInstanceRiot.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${response.data.puuid}`)
                         .then((response) => response.data)
                 ] as [RiotProfile, SummonerProfile]
             )
             .catch(() => [null, null])
 
         if (!profil || !profilRiot) {
-            embed = errorEmbed({
-                title: "Combinaison pseudo/tag invalide",
-                description: `${pseudo}#${tag} n'est pas un pseudo valide.`
-            })
-            return await interaction.editReply({ embeds: [embed] })
+            embed.setTitle("Combinaison pseudo/tag invalide")
+            embed.setDescription(`${options.pseudo}#${options.tag} n'est pas un pseudo valide.`)
+            return false;
         }
 
         if (profil.summonerLevel === 1) {
-            embed = errorEmbed({
-                title: "Nouveau compte",
-                description: `${pseudo}#${tag} n'a jamais joué à LoL.`
-            })
-            return await interaction.editReply({ embeds: [embed] });
+            embed.setTitle("Nouveau compte")
+            embed.setDescription(`${options.pseudo}#${options.tag} n'a jamais joué à LoL.`)
+            return false;
         }
-        // Fin de la vérification
 
-        // Ajout du pseudo dans le fichier configProfil.json
-        configJSON[interaction.user.id as ConfigKeys] = profil.puuid
-        fs.writeFileSync(fichier, JSON.stringify(configJSON, null, 2))
-
-        // Envoi du message final
-        var embedMessage = confirmEmbed({
-            title: `Le pseudo ${profilRiot.gameName}#${profilRiot.tagLine} est validé.`,
-            description: `Vous pouvez désormais utiliser la commande ${chatInputApplicationCommandMention("profil", "league", interaction.commandId)} sans préciser de pseudo.`
-        })
-
-        return await interaction.editReply({ embeds: [embedMessage] })
+        return { gameName: profilRiot.gameName, tagLine: profilRiot.tagLine, puuid: profilRiot.puuid };
     },
-    async league(interaction: ChatInputCommandInteraction, pseudo: string, tag: string) {
-        const guild = interaction.guild as Guild;
-
+    async league(options: commandOptions) {
         let idConfig: string;
-        let embed: EmbedBuilder;
 
         var profil: SummonerProfile | null;
         var profilRiot: RiotProfile | null;
 
-        // Vérifie si l'entrée texte de l'utilisateur correspond à une entrée dans configProfil.json
-        // ou bien à un pseudo LoL et si une information manque, renvoie une erreur
-        if (pseudo.length > 0 && pseudo.match(MessageMentions.UsersPattern)) {
-            const idDiscord = pseudo.slice(2, pseudo.length - 1)
+        var mentionCommand = chatInputApplicationCommandMention("profil", "config", await getCommandId(this.data));
+
+        if (options.pseudo.length > 0 && options.pseudo.match(MessageMentions.UsersPattern)) {
+            const idDiscord = options.pseudo.slice(2, options.pseudo.length - 1)
             idConfig = configJSON[idDiscord as ConfigKeys]
             if (!idConfig) {
-                try {
-                    const pseudoDiscord = await guild.members.fetch(idDiscord);
-                    embed = errorEmbed({
+                return errorEmbed(
+                    {
                         title: "Utilisateur non configuré",
-                        description: `${pseudoDiscord.user.username} n'a pas configuré son nom d'invocateur avec ${chatInputApplicationCommandMention("profil", "config", interaction.commandId)}`
-                    })
-                } catch {
-                    embed = errorEmbed({
-                        title: "Utilisateur inconnu",
-                        description: `${userMention(idDiscord)} n'est pas un utilisateur valide.`
-                    })
-                }
-                return await interaction.editReply({ embeds: [embed] });
+                        description: `${userMention(idDiscord)} n'a pas configuré son nom d'invocateur avec ${mentionCommand}`
+                    }
+                )
             }
-            pseudo = tag = "";
+            options.pseudo = options.tag = "";
         } else {
-            idConfig = configJSON[interaction.user.id as ConfigKeys]
+            idConfig = configJSON[options.discordId as ConfigKeys]
         }
 
-        if (!pseudo) {
+        if (!options.pseudo) {
             if (!idConfig) {
-                embed = errorEmbed({
-                    title: "Utilisateur non configuré",
-                    description: `Veuillez remplir un pseudo ou le configurez avec le ${chatInputApplicationCommandMention("profil", "config", interaction.commandId)}`
-                })
-                return await interaction.editReply({ embeds: [embed] })
+                return errorEmbed(
+                    {
+                        title: "Utilisateur non configuré",
+                        description: `Veuillez remplir un pseudo ou le configurez avec le ${mentionCommand}`
+                    }
+                )
             } else {
-                profilRiot = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`).then(response => response.data);
-                profil = await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}?api_key=${process.env.LOL_API_KEY}`).then(response => response.data);
+                profilRiot = await axiosInstanceRiot.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-puuid/${idConfig}`).then(response => response.data);
+                profil = await axiosInstanceRiot.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${idConfig}`).then(response => response.data);
             }
         } else {
-            [profilRiot, profil] = await axios.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${pseudo}/${tag}?api_key=${process.env.LOL_API_KEY}`)
+            [profilRiot, profil] = await axiosInstanceRiot.get(`https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${options.pseudo}/${options.tag}`)
                 .then(async (response) =>
                     [
                         response.data,
-                        await axios.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${response.data.puuid}?api_key=${process.env.LOL_API_KEY}`)
+                        await axiosInstanceRiot.get(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${response.data.puuid}`)
                             .then(response => response.data)
                     ] as [RiotProfile, SummonerProfile]
                 )
@@ -222,23 +217,33 @@ export default {
         }
 
         if (!profil || !profilRiot) {
-            embed = errorEmbed({
-                title: "Combinaison pseudo/tag invalide",
-                description: `${pseudo}#${tag} n'est pas un pseudo valide.`
-            })
-            return await interaction.editReply({ embeds: [embed] })
+            return errorEmbed(
+                {
+                    title: "Combinaison pseudo/tag invalide",
+                    description: `${options.pseudo}#${options.tag} n'est pas un pseudo valide.`
+                }
+            );
         }
         // Fin de la vérification 
 
         // Récupere le champion le plus joué de ce joueur et renvoie une erreur si aucun champion n'a été joué
-        const championPref: { data: { championId: number, championLevel: number, championPoints: number }[] } = await axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.puuid}?api_key=${process.env.LOL_API_KEY}`)
+        const championPref: { data: { championId: number, championLevel: number, championPoints: number, championName: string | undefined }[] } = await axiosInstanceRiot.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${profil.puuid}`)
         if (championPref.data[0] === undefined) {
-            embed = errorEmbed({
-                title: "Aucun champion joué",
-                description: `${pseudo}#${tag} n'a jamais joué à LoL.`
-            })
-            return await interaction.editReply({ embeds: [embed] });
+            return errorEmbed(
+                {
+                    title: "Aucun champion joué",
+                    description: `${options.pseudo}#${options.tag} n'a jamais joué à LoL.`
+                }
+            );
         }
+
+        championPref.data[0].championName = await axios.get(`https://ddragon.leagueoflegends.com/cdn/${LolDleGame.version}/data/fr_FR/champion.json`).then(response => {
+            for (const champion in response.data.data) {
+                if (response.data.data[champion].key == championPref.data[0].championId.toString()) {
+                    return response.data.data[champion].id
+                }
+            }
+        })
 
         // Récupere le rang et l'image associée au champion préferé
         const rank: {
@@ -256,8 +261,9 @@ export default {
                 freshBlood: boolean,
                 hotStreak: boolean
             }[]
-        } = await axios.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.id}?api_key=${process.env.LOL_API_KEY}`)
-        const image = `https://cdn.communitydragon.org/latest/champion/${championPref.data[0].championId}/tile`
+        } = await axiosInstanceRiot.get(`https://euw1.api.riotgames.com/lol/league/v4/entries/by-summoner/${profil.id}`)
+
+        const image = `https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/${championPref.data[0].championName}_0.jpg`
 
         // Deux fonctions pour la couleur du message
         function componentToHex(c: number) { let hex = c.toString(16); return hex.length == 1 ? "0" + hex : hex }
@@ -268,8 +274,8 @@ export default {
         await Vibrant.from(image).getPalette((_err: any, palette: any) => rgb = palette?.Vibrant?.rgb ?? [255, 255, 255])
 
         // Début de la constuction du message final
-        var embedMessage = new EmbedBuilder()
-            .setAuthor({ name: `${profilRiot.gameName}#${profilRiot.tagLine}`, iconURL: (`https://cdn.communitydragon.org/latest/profile-icon/${profil.profileIconId}`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.gameName)}-${encodeURI(profilRiot.tagLine)}` })
+        let embed = new EmbedBuilder().setAuthor({ name: `${profilRiot.gameName}#${profilRiot.tagLine}`, iconURL: (`https://ddragon.leagueoflegends.com/cdn/${LolDleGame.version}/img/profileicon/${profil.profileIconId}.png`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.gameName)}-${encodeURI(profilRiot.tagLine)}` })
+            .setDescription(null)
             .setThumbnail(image)
             .addFields({ name: "Niveau d'invocateur", value: profil.summonerLevel.toString() })
             .setColor(rgbToHex([rgb[0], rgb[1], rgb[2]]))
@@ -299,12 +305,13 @@ export default {
                         break
                 }
                 if (field.name !== "") {
-                    embedMessage.addFields(field)
+                    embed.addFields(field)
                 }
             }
         } else {
-            embedMessage.addFields({ name: "Solo/Duo Queue", value: `Non-classé ${emojiRank.UNRANKED}` })
+            embed.addFields({ name: "Solo/Duo Queue", value: `Non-classé ${emojiRank.UNRANKED}` })
         }
-        return await interaction.editReply({ embeds: [embedMessage] });
+
+        return embed;
     }
 }

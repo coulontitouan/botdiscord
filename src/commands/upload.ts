@@ -6,6 +6,7 @@ import path from 'path';
 import { errorEmbed } from '../lib/embeds/errorEmbed.js';
 import { confirmEmbed } from '../lib/embeds/confirmEmbed.js';
 import { informationEmbed } from '../lib/embeds/informationsEmbed.js';
+import { logger } from '../index.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -38,7 +39,8 @@ export default {
         const url = attachment.url
         const filename = attachment.name
         const contentType = attachment.contentType ? attachment.contentType.split(';')[0] : "unknown"
-        const newLink = `Lien: [${filename}](${cdnLink}/${path.join(contentType, filename)}`;
+        const newLink = `${cdnLink}/${path.join(contentType, filename)}`;
+        const newLinkMarkdown = `Lien: [${filename}](${newLink})`;
 
         const outputPath = path.join("/app/files", contentType, filename);
 
@@ -51,7 +53,7 @@ export default {
         if (fs.existsSync(outputPath)) {
             embed = errorEmbed({
                 title: 'Fichier déjà existant',
-                description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLink})`
+                description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLinkMarkdown})`
             })
             return await interaction.editReply({ embeds: [embed] });
         }
@@ -71,8 +73,9 @@ export default {
 
             embed = confirmEmbed({
                 title: 'Upload réussi',
-                description: `Le fichier a été upload avec succès. ${newLink})`
+                description: `Le fichier a été upload avec succès. ${newLinkMarkdown})`
             })
+            logger.info(`File uploaded: ${newLink} by ${interaction.user.id}`);
             return await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error(error);

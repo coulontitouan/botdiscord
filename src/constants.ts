@@ -22,6 +22,6 @@ export const AdminEmbed = informationEmbed({
 
 export const WrongGuildEmbed = informationEmbed({
     title: "Mauvais serveur",
-    description: "Vous devez être sur le serveur RATIO pour utiliser cette commande"
+    description: "Vous devez être sur le serveur RATIO² pour utiliser cette commande"
 })
 

@@ -76,7 +76,7 @@ export default {
                 description: `Le fichier a été upload avec succès. ${newLinkMarkdown})`
             })
             logger.info(`File uploaded: ${newLink} by ${interaction.user.id}`);
-            return await interaction.editReply({ embeds: [embed] });
+            return await interaction.editReply({ message: newLink, embeds: [embed] });
         } catch (error) {
             console.error(error);
             embed = errorEmbed({

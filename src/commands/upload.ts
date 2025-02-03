@@ -5,6 +5,7 @@ import axios from "axios"
 import path from 'path';
 import { errorEmbed } from '../lib/embeds/errorEmbed.js';
 import { confirmEmbed } from '../lib/embeds/confirmEmbed.js';
+import { informationEmbed } from '../lib/embeds/informationsEmbed.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -18,14 +19,13 @@ export default {
     scope: Scopes.RATIO,
     async execute(interaction: ChatInputCommandInteraction) {
         const attachment = interaction.options.get('fichier', true).attachment as Attachment
-        const cdnLink = 'https://cdn.livreur.ovh/';
+        const cdnLink = 'https://cdn.livreur.ovh';
 
-        await interaction.reply({
-            content: `Upload en cours...`,
-            ephemeral: true
-        });
-
-        let embed;
+        let embed = informationEmbed({
+            title: 'Upload en cours',
+            description: 'Fichier en cours d\'envoi, attends un peu...'
+        })
+        await interaction.reply({ embeds: [embed] });
 
         if (attachment.size > 52428800) {
             embed = errorEmbed({
@@ -38,6 +38,7 @@ export default {
         const url = attachment.url
         const filename = attachment.name
         const contentType = attachment.contentType ? attachment.contentType.split(';')[0] : "unknown"
+        const newLink = `Lien: [${filename}](${cdnLink}/${path.join(contentType, filename)}`;
 
         const outputPath = path.join("/app/files", contentType, filename);
 
@@ -50,7 +51,7 @@ export default {
         if (fs.existsSync(outputPath)) {
             embed = errorEmbed({
                 title: 'Fichier déjà existant',
-                description: `Le fichier existe déjà sur le CDN. Lien: [lien](${cdnLink}/${path.join(contentType, filename)})`
+                description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLink})`
             })
             return await interaction.editReply({ embeds: [embed] });
         }
@@ -70,7 +71,7 @@ export default {
 
             embed = confirmEmbed({
                 title: 'Upload réussi',
-                description: `Le fichier a été upload avec succès. Lien: [lien](${cdnLink}/${path.join(contentType, filename)})`
+                description: `Le fichier a été upload avec succès. ${newLink})`
             })
             return await interaction.editReply({ embeds: [embed] });
         } catch (error) {
@@ -81,7 +82,5 @@ export default {
             })
             return await interaction.editReply({ embeds: [embed] });
         }
-
-        return
     },
 }

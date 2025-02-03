@@ -1,5 +1,6 @@
 import { Events, Guild, Message } from 'discord.js';
 import fs from "fs";
+import { GUILD_ID } from '../constants.js';
 
 export default {
     name: Events.MessageCreate,
@@ -13,7 +14,7 @@ export default {
                 return message.reply("Le !debanmoi est désactivé.")
             }
 
-            const Guild = message.client.guilds.cache.get("1017742904753655828") as Guild;
+            const Guild = message.client.guilds.cache.get(GUILD_ID) as Guild;
             Guild.members.cache.map(async member => {
                 if (member.user.id == message.author.id) {
                     try {

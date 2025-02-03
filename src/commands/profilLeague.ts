@@ -1,16 +1,17 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, GuildMember, MessageMentions, APIEmbedField, formatEmoji, Snowflake, userMention, chatInputApplicationCommandMention, Routes, REST } from "discord.js"
 import axios from "axios"
 import fs from 'node:fs'
-import Vibrant from "node-vibrant"
+import { Vibrant } from "node-vibrant/node";
 import configJSON from "../../config/configProfil.json" with { type: "json" };
 import { errorEmbed } from "../lib/embeds/errorEmbed.js";
 import { confirmEmbed } from "../lib/embeds/confirmEmbed.js";
 import { LolDleGame } from "../loldleGame.js";
 import getCommandId from "../lib/functions/getCommandId.js";
+import { LOL_API_KEY } from '../constants.js';
 const fichier = "config/configProfil.json";
 
 const axiosInstanceRiot = axios.create({
-    headers: { "X-Riot-Token": process.env.LOL_API_KEY }
+    headers: { "X-Riot-Token": LOL_API_KEY }
 });
 
 type ConfigKeys = keyof typeof configJSON;
@@ -270,8 +271,7 @@ export default {
 
         function rgbToHex([r, g, b]: number[]) { return Number("0x" + componentToHex(r) + componentToHex(g) + componentToHex(b)) }
 
-        let rgb: number[] = [255, 255, 255]
-        await Vibrant.from(image).getPalette((_err: any, palette: any) => rgb = palette?.Vibrant?.rgb ?? [255, 255, 255])
+        let rgb: number[] = (await Vibrant.from(image).getPalette()).Vibrant?.rgb ?? [255, 255, 255]
 
         // Début de la constuction du message final
         let embed = new EmbedBuilder().setAuthor({ name: `${profilRiot.gameName}#${profilRiot.tagLine}`, iconURL: (`https://ddragon.leagueoflegends.com/cdn/${LolDleGame.version}/img/profileicon/${profil.profileIconId}.png`), url: `https://www.op.gg/summoners/euw/${encodeURI(profilRiot.gameName)}-${encodeURI(profilRiot.tagLine)}` })

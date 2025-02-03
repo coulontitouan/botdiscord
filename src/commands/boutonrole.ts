@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits, PermissionsBitField, GuildMember } from 'discord.js'
-import { Scopes, AdminEmbed, WrongGuildEmbed } from '../constants.js';
+import { Scopes, AdminEmbed, WrongGuildEmbed, GUILD_ID } from '../constants.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -10,13 +10,11 @@ export default {
         const member = interaction.member as GuildMember;
         const permissions = member.permissions as PermissionsBitField;
         
-        // Vérifie si l'utilisateur a les permissions
         if (!permissions.has(PermissionFlagsBits.Administrator)) {
             return await interaction.reply({ embeds: [AdminEmbed], ephemeral: true })
         }
 
-        // Vérifie si le serveur est le bon
-        if (member.guild.id !== "1017742904753655828") {
+        if (member.guild.id !== GUILD_ID) {
             return await interaction.reply({ embeds: [WrongGuildEmbed], ephemeral: true })
         }
 

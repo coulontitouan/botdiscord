@@ -1,0 +1,19 @@
+services:
+  bot:
+    container_name: botdiscord
+    build: .
+    volumes:
+      - ../web/images:/images
+    ports:
+      - "2222:2222"
+    networks:
+      my_custom_network:
+        ipv4_address: 172.25.0.2
+
+networks:
+  my_custom_network:
+    external: false
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16

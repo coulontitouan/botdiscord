@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, Guild, GuildMember, SlashCommandBuilder, time, channelMention, EmbedBuilder, userMention, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, AutocompleteInteraction } from 'discord.js';
+import { GUILD_ID } from '../constants.js';
 
 enum modes {
     FLEX = "Flex",
@@ -78,7 +79,7 @@ export default {
         const guild = interaction.guild as Guild;
 
         // Vérifie si le serveur est le bon
-        if (member.guild.id !== "1017742904753655828") {
+        if (member.guild.id !== GUILD_ID) {
             return await interaction.reply({ content: "Mauvais serveur", ephemeral: true });
         }
 

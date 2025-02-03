@@ -1,6 +1,7 @@
 import { Client, ClientUser, Events, Guild } from 'discord.js';
 import mongoose from 'mongoose';
 import cron from "cron";
+import { GUILD_ID, MONGODB_URI } from '../constants.js';
 
 export default {
     name: Events.ClientReady,
@@ -9,11 +10,11 @@ export default {
         const user = client.user as ClientUser;
         console.log(`${user.tag} est prêt!`);
 
-        const connected = await mongoose.connect(process.env.MONGODB_URI ?? "");
+        const connected = await mongoose.connect(MONGODB_URI ?? "");
 
         console.log(connected ? "Connecté à la base de données !" : "Erreur lors de la connexion à la base de données !")
 
-        const Guild = client.guilds.cache.get("1017742904753655828") as Guild;
+        const Guild = client.guilds.cache.get(GUILD_ID) as Guild;
         let botNumber = 0;
         const Members = Guild.members.cache.map(member => {
             if (member.user.bot == false) { return member.user.username } botNumber += 1

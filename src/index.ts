@@ -1,12 +1,10 @@
 import { Client, GatewayIntentBits, Events, Partials, EmbedBuilder } from "discord.js";
 import path from "node:path";
 import fs from "fs";
-import dotenv from 'dotenv';
 import { remindModel } from "./schemas/remindSchema.js";
 import { fileURLToPath, pathToFileURL } from 'url';
 import { LolDleGame } from "./loldleGame.js";
-
-dotenv.config();
+import { TOKEN } from './constants.js';
 
 const client = new Client({
     partials: [
@@ -126,25 +124,25 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 })
 
-setInterval(async () => {
-    const data = await remindModel.find();
-    // if (data.length == 0) { console.log("bd vide") }
-    for (let i of data) {
-        if (i.Time.valueOf() <= Date.now()) {
-            client.users.fetch(i.User).then((user) => {
-                let embed = new EmbedBuilder()
-                    .setTitle("Rappel")
-                    //.setDescription(`Votre rappel pour la partie en ${i.type}, le ${i.date} à ${i.heure} dans le salon ${i.salon}`)
-                    //.setTimestamp()
-                    .setURL(i.url)
-                user.send({ embeds: [embed], content: `Votre rappel pour le match ${i.url}` });
-            });
-            await remindModel.findByIdAndDelete(i._id);
-        }
-    }
-}, 60000)
+// setInterval(async () => {
+//     const data = await remindModel.find();
+//     // if (data.length == 0) { console.log("bd vide") }
+//     for (let i of data) {
+//         if (i.Time.valueOf() <= Date.now()) {
+//             client.users.fetch(i.User).then((user) => {
+//                 let embed = new EmbedBuilder()
+//                     .setTitle("Rappel")
+//                     //.setDescription(`Votre rappel pour la partie en ${i.type}, le ${i.date} à ${i.heure} dans le salon ${i.salon}`)
+//                     //.setTimestamp()
+//                     .setURL(i.url)
+//                 user.send({ embeds: [embed], content: `Votre rappel pour le match ${i.url}` });
+//             });
+//             await remindModel.findByIdAndDelete(i._id);
+//         }
+//     }
+// }, 60000)
 
-await LolDleGame.newChampion();
-setInterval(() => LolDleGame.newChampion(), 24 * 60 * 60 * 1000)
+// await LolDleGame.newChampion();
+// setInterval(() => LolDleGame.newChampion(), 24 * 60 * 60 * 1000)
 
-client.login(process.env.TOKEN);
+client.login(TOKEN);

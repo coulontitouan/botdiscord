@@ -3,6 +3,8 @@ import { Scopes } from '../constants.js';
 import fs from "fs";
 import axios from "axios"
 import path from 'path';
+import { errorEmbed } from '../lib/embeds/errorEmbed.js';
+import { confirmEmbed } from '../lib/embeds/confirmEmbed.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -16,12 +18,21 @@ export default {
     scope: Scopes.RATIO,
     async execute(interaction: ChatInputCommandInteraction) {
         const attachment = interaction.options.get('fichier', true).attachment as Attachment
-        
+        const cdnLink = 'https://cdn.livreur.ovh/';
+
+        await interaction.reply({
+            content: `Upload en cours...`,
+            ephemeral: true
+        });
+
+        let embed;
+
         if (attachment.size > 52428800) {
-            return interaction.reply({
-                content: `Le fichier est trop lourd. (max 50Mo)`,
-                ephemeral: true
+            embed = errorEmbed({
+                title: 'Fichier trop lourd (comme Noam)',
+                description: 'Le fichier est trop lourd. (max 50Mo)'
             })
+            return await interaction.editReply({ embeds: [embed] });
         }
 
         const url = attachment.url
@@ -29,7 +40,6 @@ export default {
         const contentType = attachment.contentType ? attachment.contentType.split(';')[0] : "unknown"
 
         const outputPath = path.join("/app/files", contentType, filename);
-        // const outputPath = path.join('files', contentType, filename);
 
         const response = await axios({
             url,
@@ -37,15 +47,17 @@ export default {
             responseType: 'stream',
         });
 
-        console.log(outputPath)
+        if (fs.existsSync(outputPath)) {
+            embed = errorEmbed({
+                title: 'Fichier déjà existant',
+                description: `Le fichier existe déjà sur le CDN. Lien: [lien](${cdnLink}/${path.join(contentType, filename)})`
+            })
+            return await interaction.editReply({ embeds: [embed] });
+        }
+
         if (!fs.existsSync(path.dirname(outputPath))) {
             fs.mkdirSync(path.dirname(outputPath), { recursive: true });
         }
-
-        await interaction.reply({
-            content: `Upload en cours...`,
-            ephemeral: true
-        });
 
         try {
             const writer = fs.createWriteStream(outputPath);
@@ -56,14 +68,18 @@ export default {
                 writer.on('error', reject);
             });
 
-            interaction.editReply({
-                content: `Le fichier a été uploadé avec succès.`,
-            });
+            embed = confirmEmbed({
+                title: 'Upload réussi',
+                description: `Le fichier a été upload avec succès. Lien: [lien](${cdnLink}/${path.join(contentType, filename)})`
+            })
+            return await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error(error);
-            interaction.editReply({
-                content: `Une erreur s'est produite lors de l'upload du fichier.`,
-            });
+            embed = errorEmbed({
+                title: 'Erreur lors de l\'upload',
+                description: 'Une erreur est survenue lors de l\'upload du fichier.'
+            })
+            return await interaction.editReply({ embeds: [embed] });
         }
 
         return

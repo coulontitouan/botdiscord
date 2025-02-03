@@ -3,7 +3,7 @@ services:
     container_name: botdiscord
     build: .
     volumes:
-      - ../web/images:/app/images
+        - ../web/files:/app/files
     ports:
       - "2222:2222"
     networks:

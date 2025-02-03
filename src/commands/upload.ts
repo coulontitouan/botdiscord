@@ -6,7 +6,7 @@ import path from 'path';
 import { errorEmbed } from '../lib/embeds/errorEmbed.js';
 import { confirmEmbed } from '../lib/embeds/confirmEmbed.js';
 import { informationEmbed } from '../lib/embeds/informationsEmbed.js';
-import { logger } from '../index.js';
+import { logger } from '../logger.js';
 
 export default {
     data: new SlashCommandBuilder()

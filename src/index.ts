@@ -5,7 +5,6 @@ import { remindModel } from "./schemas/remindSchema.js";
 import { fileURLToPath, pathToFileURL } from 'url';
 import { LolDleGame } from "./loldleGame.js";
 import { TOKEN } from './constants.js';
-import winston from 'winston';
 
 const client = new Client({
     partials: [
@@ -19,13 +18,6 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildVoiceStates,
-    ]
-});
-
-export const logger = winston.createLogger({
-    level: 'info',
-    transports: [
-        new winston.transports.File({ filename: path.join('/app/files', 'logs.txt') })
     ]
 });
 

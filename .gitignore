@@ -7,3 +7,4 @@ ssh.key
 .DS_STORE
 .env
 build
+files

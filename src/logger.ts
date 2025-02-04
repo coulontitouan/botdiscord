@@ -8,7 +8,7 @@ export const logger = createLogger({
         format.json()
     ),
     transports: [
-        new transports.File({ filename: path.join('files', 'logs.txt') })
+        new transports.File({ filename: path.join('/app/files', 'logs.txt') })
     ]
 });
 

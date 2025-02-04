@@ -53,7 +53,7 @@ export default {
         if (fs.existsSync(outputPath)) {
             embed = errorEmbed({
                 title: 'Fichier déjà existant',
-                description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLinkMarkdown})`
+                description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLinkMarkdown}`
             })
             return await interaction.editReply({ embeds: [embed] });
         }
@@ -73,7 +73,7 @@ export default {
 
             embed = confirmEmbed({
                 title: 'Upload réussi',
-                description: `Le fichier a été upload avec succès. ${newLinkMarkdown})`
+                description: `Le fichier a été upload avec succès. ${newLinkMarkdown}`
             })
             logger.info(`File uploaded: ${newLink} by ${interaction.user.id}`);
             return await interaction.editReply({ content: newLink, embeds: [embed] });

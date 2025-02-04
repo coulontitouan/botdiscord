@@ -26,14 +26,14 @@ export default {
             title: 'Upload en cours',
             description: 'Fichier en cours d\'envoi, attends un peu...'
         })
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed], ephemeral: true });
 
         if (attachment.size > 52428800) {
             embed = errorEmbed({
                 title: 'Fichier trop lourd (comme Noam)',
                 description: 'Le fichier est trop lourd. (max 50Mo)'
             })
-            return await interaction.editReply({ embeds: [embed] });
+            return await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
         const url = attachment.url
@@ -55,7 +55,7 @@ export default {
                 title: 'Fichier déjà existant',
                 description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLinkMarkdown}`
             })
-            return await interaction.editReply({ embeds: [embed] });
+            return await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
         if (!fs.existsSync(path.dirname(outputPath))) {
@@ -76,14 +76,14 @@ export default {
                 description: `Le fichier a été upload avec succès. ${newLinkMarkdown}`
             })
             logger.info(`File uploaded: ${newLink} by ${interaction.user.id}`);
-            return await interaction.editReply({ content: newLink, embeds: [embed] });
+            return await interaction.editReply({ embeds: [embed], ephemeral: true });
         } catch (error) {
             console.error(error);
             embed = errorEmbed({
                 title: 'Erreur lors de l\'upload',
                 description: 'Une erreur est survenue lors de l\'upload du fichier.'
             })
-            return await interaction.editReply({ embeds: [embed] });
+            return await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
     },
 }

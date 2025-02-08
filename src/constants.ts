@@ -9,12 +9,6 @@ export const LOL_API_KEY = process.env.LOL_API_KEY as string;
 export const TFT_API_KEY = process.env.TFT_API_KEY as string;
 export const MONGODB_URI = process.env.MONGODB_URI as string;
 
-export enum Scopes {
-    DM = 'dm',
-    GUILD = 'guild',
-    RATIO = 'ratio'
-}
-
 export const AdminEmbed = informationEmbed({
     title: "Permissions manquantes",
     description: "Vous devez être administrateur pour utiliser cette commande"

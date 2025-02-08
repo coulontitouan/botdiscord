@@ -1,11 +1,10 @@
 import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits, PermissionsBitField, GuildMember } from 'discord.js'
-import { Scopes, AdminEmbed, WrongGuildEmbed, GUILD_ID } from '../constants.js';
+import { AdminEmbed, WrongGuildEmbed, GUILD_ID } from '../constants.js';
 
 export default {
     data: new SlashCommandBuilder()
         .setName('boutonrole')
         .setDescription('Créer le bouton role'),
-    scope: Scopes.GUILD,
     async execute(interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember;
         const permissions = member.permissions as PermissionsBitField;

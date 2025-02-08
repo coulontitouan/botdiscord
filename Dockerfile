@@ -26,4 +26,4 @@ RUN npm install
 
 EXPOSE 2222
 
-CMD service ssh start && npm run start
+CMD service ssh start && npm run dev

@@ -1,6 +1,5 @@
 import { SlashCommandBuilder, PermissionsBitField, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, SlashCommandBooleanOption } from 'discord.js';
 import fs from "fs";
-import { Scopes } from '../constants.js';
 
 const option = new SlashCommandBooleanOption()
     .setName('statut')
@@ -21,7 +20,6 @@ export default {
                 .setDescription('Réponds, ou non, aux quoi-feur etc')
                 .addBooleanOption(option)
         ),
-    scope: Scopes.RATIO,
     async execute(interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember;
         const permissions = member.permissions as PermissionsBitField;

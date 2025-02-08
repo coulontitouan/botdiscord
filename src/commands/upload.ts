@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, PermissionsBitField, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, SlashCommandBooleanOption, SlashCommandAttachmentOption, Attachment } from 'discord.js';
-import { Scopes } from '../constants.js';
+import { SlashCommandBuilder, PermissionsBitField, ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, SlashCommandBooleanOption, SlashCommandAttachmentOption, Attachment, InteractionContextType } from 'discord.js';
 import fs from "fs";
 import axios from "axios"
 import path from 'path';
@@ -16,8 +15,8 @@ export default {
             .setName('fichier')
             .setDescription('Le fichier à upload sur le CDN.')
             .setRequired(true)
-        ),
-    scope: Scopes.RATIO,
+        )
+        .setContexts([InteractionContextType.Guild, InteractionContextType.PrivateChannel]),
     async execute(interaction: ChatInputCommandInteraction) {
         const attachment = interaction.options.get('fichier', true).attachment as Attachment
         const cdnLink = 'https://cdn.livreur.ovh';
@@ -33,7 +32,7 @@ export default {
                 title: 'Fichier trop lourd (comme Noam)',
                 description: 'Le fichier est trop lourd. (max 50Mo)'
             })
-            return await interaction.editReply({ embeds: [embed], ephemeral: true });
+            return await interaction.editReply({ embeds: [embed] });
         }
 
         const url = attachment.url
@@ -55,7 +54,7 @@ export default {
                 title: 'Fichier déjà existant',
                 description: `Le fichier existe déjà sur le CDN, renomme ton fichier. ${newLinkMarkdown}`
             })
-            return await interaction.editReply({ embeds: [embed], ephemeral: true });
+            return await interaction.editReply({ embeds: [embed] });
         }
 
         if (!fs.existsSync(path.dirname(outputPath))) {
@@ -76,14 +75,14 @@ export default {
                 description: `Le fichier a été upload avec succès. ${newLinkMarkdown}`
             })
             logger.info(`File uploaded: ${newLink} by ${interaction.user.id}`);
-            return await interaction.editReply({ embeds: [embed], ephemeral: true });
+            return await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error(error);
             embed = errorEmbed({
                 title: 'Erreur lors de l\'upload',
                 description: 'Une erreur est survenue lors de l\'upload du fichier.'
             })
-            return await interaction.editReply({ embeds: [embed], ephemeral: true });
+            return await interaction.editReply({ embeds: [embed] });
         }
     },
 }

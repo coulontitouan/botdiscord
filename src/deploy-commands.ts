@@ -4,11 +4,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { CLIENT_ID, GUILD_ID, TOKEN } from './constants.js';
+import { CLIENT_ID, GUILD_ID, REST_CLIENT } from './constants.js';
+import { RESTPostAPIChatInputApplicationCommandsJSONBody, SlashCommandOptionsOnlyBuilder } from 'discord.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const commands: any[] = [];
+const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath, { recursive: true, withFileTypes: true }).filter(file => file.isFile() && file.name.endsWith('.js'));
 
@@ -18,28 +19,19 @@ for (const file of commandFiles) {
     commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: '10' }).setToken(TOKEN as string);
-
 (async () => {
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
-        const data = await rest.put(
-            Routes.applicationCommands(CLIENT_ID as string),
-            // Routes.applicationGuildCommands(CLIENT_ID as string, GUILD_ID as string),
+        const data = await REST_CLIENT.put(
+            Routes.applicationCommands(CLIENT_ID),
+            // Routes.applicationGuildCommands(CLIENT_ID , GUILD_ID ),
             { body: commands },
         ) as any[];
 
-        Routes.applicationCommands(CLIENT_ID as string);
+        Routes.applicationCommands(CLIENT_ID);
 
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
     } catch (error) {
         console.error(error);
     }
 })();
-
-const allcommands: any[] = await rest.get(Routes.applicationGuildCommands(CLIENT_ID as string, GUILD_ID as string)) as any[];
-for (const command of allcommands) {
-    rest.delete(Routes.applicationGuildCommand(CLIENT_ID as string, GUILD_ID as string, command.id))
-        .then(() => console.log('Successfully deleted application command'))
-        .catch(console.error)
-}

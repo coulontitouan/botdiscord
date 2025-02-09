@@ -1,3 +1,4 @@
+import { REST } from "@discordjs/rest";
 import { informationEmbed } from "./lib/embeds/informationsEmbed.js";
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +9,8 @@ export const TOKEN = process.env.TOKEN as string;
 export const LOL_API_KEY = process.env.LOL_API_KEY as string;
 export const TFT_API_KEY = process.env.TFT_API_KEY as string;
 export const MONGODB_URI = process.env.MONGODB_URI as string;
+
+export const REST_CLIENT = new REST({ version: '10' }).setToken(TOKEN);
 
 export const AdminEmbed = informationEmbed({
     title: "Permissions manquantes",

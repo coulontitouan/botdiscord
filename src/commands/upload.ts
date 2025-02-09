@@ -16,7 +16,7 @@ export default {
             .setDescription('Le fichier à upload sur le CDN.')
             .setRequired(true)
         )
-        .setContexts([InteractionContextType.Guild, InteractionContextType.PrivateChannel]),
+        .setContexts([InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel]),
     async execute(interaction: ChatInputCommandInteraction) {
         const attachment = interaction.options.get('fichier', true).attachment as Attachment
         const cdnLink = 'https://cdn.livreur.ovh';
@@ -41,7 +41,7 @@ export default {
         const newLink = `${cdnLink}/${path.join(contentType, filename)}`;
         const newLinkMarkdown = `Lien: [${filename}](${newLink})`;
 
-        const outputPath = path.join("/app/files", contentType, filename);
+        const outputPath = path.join("./files", contentType, filename);
 
         const response = await axios({
             url,

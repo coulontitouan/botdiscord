@@ -20,6 +20,7 @@
     "scripts": {
         "build": "tsc",
         "deploy": "npm run build && node --no-warnings build/deploy-commands.js",
+        "delete": "npm run build && node --no-warnings build/delete-commands.js",
         "start": "npm run deploy && node --no-warnings build/index.js",
         "dev": "nodemon --exec node --loader ts-node/esm src/index.ts"
     },
